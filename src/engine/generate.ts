@@ -27,9 +27,9 @@ interface Kind {
 
 const k = (from: Base, to: Base, min: number, max: number): Kind => ({ from, to, min, max });
 
-/** Conversioni e intervalli dei valori per livello (proposta del piano, da calibrare con le classi). */
+/** Conversioni e intervalli dei valori per livello. Coppie decise da Marco il 2 novembre 2026: facile solo decimale con binario e ottale; intermedio aggiunge l’esadecimale e i passaggi diretti dal binario; difficile aggiunge ottale ↔ esadecimale e le basi esotiche. Intervalli da calibrare con le classi. */
 export const KINDS: Record<Level, readonly Kind[]> = {
-  easy: [k(2, 10, 8, 63), k(10, 2, 8, 63), k(2, 16, 16, 63)],
+  easy: [k(2, 10, 8, 63), k(10, 2, 8, 63), k(8, 10, 8, 63), k(10, 8, 8, 63)],
   medium: [
     k(2, 10, 64, 255),
     k(10, 2, 64, 255),
