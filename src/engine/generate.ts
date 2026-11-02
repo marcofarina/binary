@@ -83,13 +83,34 @@ function isTrivial(digits: string): boolean {
 export interface GenerateOptions {
   /** L’esercizio precedente: si evita di riproporre subito la stessa conversione. */
   previous?: Pick<Exercise, 'from' | 'to'>;
+  /**
+   * Solo una conversione (allenamento). Se il livello non la prevede, si usa l’intervallo del livello più vicino
+   * che la prevede; `'exotic'` chiede le basi esotiche a qualunque livello.
+   */
+  only?: Pick<Exercise, 'from' | 'to'> | 'exotic';
+}
+
+/** Le conversioni proposte in allenamento: tutte quelle dei livelli, senza ripetizioni. */
+export const PRACTICE_PAIRS: readonly Pick<Exercise, 'from' | 'to'>[] = LEVELS.flatMap((level) => KINDS[level])
+  .map(({ from, to }) => ({ from, to }))
+  .filter((pair, i, all) => all.findIndex((p) => p.from === pair.from && p.to === pair.to) === i);
+
+function kindFor(level: Level, pair: Pick<Exercise, 'from' | 'to'>): Kind {
+  const order = [...LEVELS].sort(
+    (a, b) => Math.abs(LEVELS.indexOf(a) - LEVELS.indexOf(level)) - Math.abs(LEVELS.indexOf(b) - LEVELS.indexOf(level)),
+  );
+  for (const candidate of order) {
+    const kind = KINDS[candidate].find((c) => c.from === pair.from && c.to === pair.to);
+    if (kind) return kind;
+  }
+  throw new RangeError(`Conversione non prevista: ${pair.from} → ${pair.to}.`);
 }
 
 export function generate(level: Level, rng: Rng, options: GenerateOptions = {}): Exercise {
-  const exotic = level === 'hard' && rng() < EXOTIC_RATE;
-  let kind = exotic ? exoticKind(rng) : pick(rng, KINDS[level]);
-  const { previous } = options;
-  if (!exotic && previous && kind.from === previous.from && kind.to === previous.to) {
+  const { previous, only } = options;
+  const exotic = only === 'exotic' || (only === undefined && level === 'hard' && rng() < EXOTIC_RATE);
+  let kind = exotic ? exoticKind(rng) : only ? kindFor(level, only) : pick(rng, KINDS[level]);
+  if (!exotic && !only && previous && kind.from === previous.from && kind.to === previous.to) {
     const others = KINDS[level].filter((c) => c.from !== previous.from || c.to !== previous.to);
     if (others.length > 0) kind = pick(rng, others);
   }
