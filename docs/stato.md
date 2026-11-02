@@ -12,10 +12,15 @@ Da leggere insieme a `CLAUDE.md` e `docs/piano.md` all’inizio di ogni sessione
 
 - Fase 3 (PR #4, unita): sette lezioni in `src/content/lezioni/it/`, tutte in `stato: bozza`, con widget in `src/components/lesson/` (contachilometri, tabella dei pesi, animatore delle divisioni, gruppi di bit, registro di memoria, permessi `chmod`, selettore di colore). Ogni lezione chiude con un link all’allenamento, che ora legge `?conversione=` e `?livello=`. Tabelle della prosa con stile proprio. Test e2e con axe su tutte le lezioni, in chiaro e in scuro.
 
+- Dopo la fase 3: livello facile ridotto a decimale ↔ binario e ottale (PR #6); gruppi di bit separati da un margine di 0,2em (PR #5 non bastava: il separatore era già uno spazio sottile, corretto in fase 4).
+
+- Fase 4 (branch `fase-4-rifinitura`): modalità LIM (pulsante nell’intestazione, `?lim=1` e `?lim=0`, testo al 137,5% e contrasto più alto, chiave `binary-lim`); schede stampabili in `/schede/` (logica in `src/game/worksheet.ts`, codice nel link, soluzioni su una pagina a parte, stampa sempre nero su bianco); pagina docenti con la tabella dei livelli generata dal motore; link della prosa sottolineati; animazioni ridotte rispettate anche nei widget delle lezioni. Test e2e su LIM, schede, tastiera e animazioni ridotte.
+
 ## Prossimo passo
 
 - Revisione delle lezioni da parte dell’autore (da `bozza` a `rivista`).
-- Fase 4: accessibilità, pagina docenti, modalità LIM, schede stampabili.
+- Il piano è completo. Sviluppi già indicati da Marco: virgola mobile, precisione, complemento a 2.
+- Da valutare: un controllo con un lettore di schermo vero (NVDA o VoiceOver), che i test automatici non sostituiscono.
 
 ## Da verificare
 

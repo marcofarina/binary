@@ -30,6 +30,11 @@ const fullTitle = title ? `${title} · ${t('site.title')}` : `${t('site.title')}
       try {
         const saved = localStorage.getItem('binary-theme');
         if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+        // Modalità LIM: da ?lim=1 (link del docente) o dalla scelta salvata.
+        const lim = new URLSearchParams(location.search).get('lim');
+        if (lim === '1') localStorage.setItem('binary-lim', 'on');
+        if (lim === '0') localStorage.setItem('binary-lim', 'off');
+        if (localStorage.getItem('binary-lim') === 'on') document.documentElement.dataset.lim = 'on';
       } catch {
         // Archiviazione non disponibile: si segue la preferenza di sistema.
       }

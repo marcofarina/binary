@@ -12,7 +12,7 @@ interface Props {
 export function Numeral({ digits, base, group = false, className = '' }: Props) {
   const size = 4;
   // I gruppi sono separati da un piccolo margine, non da uno spazio: si leggono come un unico numero.
-  const groups = group && base === 2 && digits.length > size ? groupForDisplay(digits, size).split(' ') : [digits];
+  const groups = group && base === 2 && digits.length > size ? groupForDisplay(digits, size, '|').split('|') : [digits];
   return (
     <span className={`whitespace-nowrap font-mono ${className}`}>
       <span aria-hidden="true">

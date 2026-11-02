@@ -114,6 +114,11 @@
     padding-inline-start: 1.5rem;
   }
 
+  /* Nei testi i link si riconoscono anche senza colore. */
+  .prose-it a {
+    text-decoration: underline;
+  }
+
   .prose-it table {
     display: block;
     max-width: 100%;
@@ -166,4 +171,17 @@
 .prose-it table:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/*
+ * Modalità LIM: tutto più grande (le misure sono in rem) e contrasto più alto, per la proiezione in classe.
+ * Le variabili si ridefiniscono su body, così valgono in entrambi i temi.
+ */
+html[data-lim='on'] {
+  font-size: 137.5%;
+}
+
+html[data-lim='on'] body {
+  --color-text-muted: var(--color-text);
+  --color-border: color-mix(in oklab, var(--color-text) 55%, transparent);
 }
