@@ -76,3 +76,19 @@ const link = (entry: typeof lezione) => url(`teoria/${lessonSlug(entry)}/`);
     </nav>
   )}
 </BaseLayout>
+
+<script>
+  // Le tabelle della prosa scorrono in orizzontale sugli schermi stretti: quando scorrono
+  // devono poter ricevere il focus, così si scorrono anche da tastiera.
+  function tabelleScorrevoli() {
+    for (const table of document.querySelectorAll<HTMLTableElement>('.prose-it table')) {
+      if (table.scrollWidth > table.clientWidth) {
+        table.tabIndex = 0;
+      } else {
+        table.removeAttribute('tabindex');
+      }
+    }
+  }
+  tabelleScorrevoli();
+  window.addEventListener('resize', tabelleScorrevoli);
+</script>
