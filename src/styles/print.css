@@ -1,0 +1,29 @@
+/* Stampa su A4: usato dalle schede per la classe. */
+@page {
+  size: A4;
+  margin: 15mm;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page-break {
+    break-before: page;
+  }
+}

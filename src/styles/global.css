@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* `lim:` vale dentro la sfida in modalità LIM (attributo `data-lim`, fase 4). */
+@custom-variant lim (&:where([data-lim], [data-lim] *));
+
+/* Le utility Tailwind puntano ai design token, così il tema si cambia solo in tokens.css. */
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-contrast: var(--color-accent-contrast);
+  --color-focus: var(--color-focus);
+  --color-correct: var(--color-correct);
+  --color-wrong: var(--color-wrong);
+  --color-streak: var(--color-streak);
+  --color-rainbow-1: var(--color-rainbow-1);
+  --color-rainbow-2: var(--color-rainbow-2);
+  --color-rainbow-3: var(--color-rainbow-3);
+  --color-rainbow-4: var(--color-rainbow-4);
+  --color-rainbow-5: var(--color-rainbow-5);
+  --color-rainbow-6: var(--color-rainbow-6);
+  --color-rainbow-7: var(--color-rainbow-7);
+  --color-qr-dark: var(--color-qr-dark);
+  --color-qr-light: var(--color-qr-light);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-underline-offset: 0.2em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .prose-it {
+    max-width: var(--content-width);
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+  }
+
+  .prose-it h1,
+  .prose-it h2,
+  .prose-it h3 {
+    font-family: var(--font-sans);
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  .prose-it h1 {
+    font-size: 2.25rem;
+    margin-block: 0 1rem;
+  }
+
+  .prose-it h2 {
+    font-size: 1.6rem;
+    margin-block: 2.5rem 0.75rem;
+  }
+
+  .prose-it h3 {
+    font-size: 1.25rem;
+    margin-block: 2rem 0.5rem;
+  }
+
+  .prose-it p,
+  .prose-it ul,
+  .prose-it ol {
+    margin-block: 0 1rem;
+  }
+
+  .prose-it ul {
+    list-style: disc;
+    padding-inline-start: 1.5rem;
+  }
+
+  .prose-it ol {
+    list-style: decimal;
+    padding-inline-start: 1.5rem;
+  }
+
+  .prose-it code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+}
+
+/* Il bit che si accende nella home (annullato da prefers-reduced-motion). */
+@theme {
+  --animate-accendi: accendi 600ms ease-out both;
+
+  @keyframes accendi {
+    from {
+      transform: translateY(-20%) scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+}

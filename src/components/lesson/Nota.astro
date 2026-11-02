@@ -1,0 +1,13 @@
+---
+interface Props {
+  titolo?: string;
+}
+const { titolo } = Astro.props;
+---
+
+<aside class="my-6 rounded-lg border-l-4 border-accent bg-surface-muted px-5 py-4 font-sans text-base">
+  {titolo && <p class="mb-1 font-semibold">{titolo}</p>}
+  <div class="[&>p:last-child]:mb-0">
+    <slot />
+  </div>
+</aside>

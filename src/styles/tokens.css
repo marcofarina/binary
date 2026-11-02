@@ -1,0 +1,82 @@
+/*
+ * Design token di Binary.
+ * I nomi coincidono con quelli di Enigma, così un domani le identità visive di Rainbow Bits si possono unificare;
+ * i valori sono propri: un look più vivace, da sala giochi, con l’arcobaleno come filo conduttore.
+ * Ogni componente usa solo queste variabili (direttamente o tramite le utility Tailwind in global.css).
+ */
+:root {
+  color-scheme: light;
+
+  --color-bg: #f6f5fc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #ebe8f7;
+  --color-border: #cfc9e6;
+  --color-text: #17142b;
+  --color-text-muted: #4f4a6b;
+  --color-accent: #5a2bd4;
+  --color-accent-contrast: #ffffff;
+  --color-focus: #0b63d1;
+
+  /* Esito delle risposte e streak: usati sempre insieme a un’icona o a un testo, mai da soli. */
+  --color-correct: #0f7a3d;
+  --color-wrong: #b42318;
+  --color-streak: #c2410c;
+
+  /* Arcobaleno decorativo (bit della home, sfondo della streak): mai per il testo. */
+  --color-rainbow-1: #e5484d;
+  --color-rainbow-2: #f76b15;
+  --color-rainbow-3: #ffc53d;
+  --color-rainbow-4: #30a46c;
+  --color-rainbow-5: #0090ff;
+  --color-rainbow-6: #3e63dd;
+  --color-rainbow-7: #8e4ec6;
+
+  /* Codici QR: scuro su chiaro in entrambi i temi, perché li leggano tutti i telefoni. */
+  --color-qr-dark: #000000;
+  --color-qr-light: #ffffff;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+
+  --radius: 0.75rem;
+  --content-width: 72ch;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0f0c21;
+  --color-surface: #18142f;
+  --color-surface-muted: #241e45;
+  --color-border: #3d3568;
+  --color-text: #f2f0ff;
+  --color-text-muted: #b6afd9;
+  --color-accent: #b9a1ff;
+  --color-accent-contrast: #0f0c21;
+  --color-focus: #7fb4ff;
+
+  --color-correct: #4ade80;
+  --color-wrong: #ff8a80;
+  --color-streak: #ffa94d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --color-bg: #0f0c21;
+    --color-surface: #18142f;
+    --color-surface-muted: #241e45;
+    --color-border: #3d3568;
+    --color-text: #f2f0ff;
+    --color-text-muted: #b6afd9;
+    --color-accent: #b9a1ff;
+    --color-accent-contrast: #0f0c21;
+    --color-focus: #7fb4ff;
+
+    --color-correct: #4ade80;
+    --color-wrong: #ff8a80;
+    --color-streak: #ffa94d;
+  }
+}
