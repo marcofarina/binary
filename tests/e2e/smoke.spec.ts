@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-const pages = ['', 'sfida/', 'allenamento/', 'teoria/', 'docenti/'];
+const pages = ['', 'sfida/', 'allenamento/', 'teoria/', 'docenti/', 'schede/'];
 
 for (const path of pages) {
   test(`la pagina /${path} si carica ed è accessibile`, async ({ page }) => {

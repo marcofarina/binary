@@ -1,0 +1,43 @@
+---
+import { t } from '@/i18n';
+---
+
+<button
+  type="button"
+  class="lim-toggle inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-md border border-border px-2 text-sm font-semibold text-text hover:bg-surface-muted aria-pressed:bg-accent aria-pressed:text-accent-contrast"
+  aria-pressed="false"
+  title={t('lim.toggle')}
+>
+  <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="3" y="4" width="18" height="12" rx="1"></rect>
+    <path d="M12 16v4M8 20h8"></path>
+  </svg>
+  <span>{t('lim.label')}</span>
+  <span class="sr-only">{t('lim.toggle')}</span>
+</button>
+
+<script>
+  const KEY = 'binary-lim';
+
+  function sync() {
+    const on = document.documentElement.dataset['lim'] === 'on';
+    for (const button of document.querySelectorAll<HTMLButtonElement>('.lim-toggle')) {
+      button.setAttribute('aria-pressed', String(on));
+    }
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.lim-toggle')) {
+    button.addEventListener('click', () => {
+      const on = document.documentElement.dataset['lim'] !== 'on';
+      if (on) document.documentElement.dataset['lim'] = 'on';
+      else delete document.documentElement.dataset['lim'];
+      try {
+        localStorage.setItem(KEY, on ? 'on' : 'off');
+      } catch {
+        // Archiviazione non disponibile: la modalità vale solo per questa pagina.
+      }
+      sync();
+    });
+  }
+  sync();
+</script>

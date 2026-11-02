@@ -1,11 +1,107 @@
 ---
-import ComingSoon from '@/components/content/ComingSoon.astro';
+import { EXOTIC_RATE, KINDS, LEVELS } from '@/engine';
+import { levelLabel } from '@/components/exercise/labels';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
+import { url } from '@/lib/url';
+
+const name = (base: number) => t(`base.name.${base}` as Parameters<typeof t>[0]);
+const fmt = (n: number) => n.toLocaleString('it-IT');
+
+/** La tabella dei livelli si costruisce dal motore, così resta sempre allineata al generatore. */
+const levels = LEVELS.map((level) => ({
+  level,
+  rows: KINDS[level].map((k) => ({
+    pair: `${name(k.from)} → ${name(k.to)}`,
+    range: `da ${fmt(k.min)} a ${fmt(k.max)}`,
+  })),
+}));
 ---
 
-<BaseLayout title="Docenti">
-  <ComingSoon
-    title="Per i docenti"
-    intro="Come usare Binary in classe: il codice sfida per dare a tutti la stessa sequenza di esercizi, la modalità LIM e i collegamenti con il programma del biennio."
-  />
+<BaseLayout
+  title="Docenti"
+  description="Come usare Binary in classe: sfida con codice comune, allenamento mirato, schede stampabili e modalità LIM."
+>
+  <article class="prose-it">
+    <h1>Per i docenti</h1>
+    <p>
+      Binary è un eserciziario sulle conversioni tra basi pensato per il primo anno delle superiori. Non richiede
+      account e non raccoglie dati: record e preferenze restano nel browser di chi lo usa.
+    </p>
+
+    <h2>Tutta la classe sugli stessi esercizi</h2>
+    <p>
+      Nella <a href={url('sfida/')}>sfida</a> si può scrivere un <strong>codice sfida</strong>, un numero da 1 a 999
+      999. Con lo stesso codice ogni studente riceve la stessa sequenza di esercizi, e i punteggi diventano
+      confrontabili. Basta scriverlo alla lavagna, oppure condividere il link che compare a fine partita.
+    </p>
+    <ul>
+      <li>
+        <strong>Endless</strong>: tre esercizi facili, tre intermedi, poi difficili senza fine. Un errore fa scendere di
+        un livello e mostra il procedimento con il punto in cui probabilmente è nato lo sbaglio.
+      </li>
+      <li>
+        <strong>A vite</strong>: difficoltà miste e tre vite. Adatta a una gara breve a fine lezione.
+      </li>
+    </ul>
+
+    <h2>Che cosa allena ogni livello</h2>
+    {levels.map(({ level, rows }) => (
+      <>
+        <h3>{levelLabel(level).replace(/^./, (c) => c.toUpperCase())}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Conversione</th>
+              <th scope="col">Valori</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr>
+                <td>{row.pair}</td>
+                <td>{row.range}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    ))}
+    <p>
+      Nel livello difficile, circa una volta su {Math.round(1 / EXOTIC_RATE)}, compare una base “esotica” tra 3 e 15. Le
+      conversioni tra due basi diverse da dieci si possono svolgere passando dal decimale; il campo facoltativo per il
+      valore intermedio aiuta a capire in quale fase è nato l’errore.
+    </p>
+
+    <h2>Allenamento mirato</h2>
+    <p>
+      Nell’<a href={url('allenamento/')}>allenamento</a> si sceglie una sola conversione e un livello, senza punteggio e
+      con il procedimento sempre disponibile. Il link si può preparare in anticipo: per esempio{' '}
+      <a href={url('allenamento/?conversione=10-2&livello=easy')}>
+        <code>/allenamento/?conversione=10-2&amp;livello=easy</code>
+      </a>{' '}
+      apre direttamente le divisioni successive per due.
+    </p>
+
+    <h2>Schede stampabili</h2>
+    <p>
+      Le <a href={url('schede/')}>schede</a> generano da 6 a 20 esercizi da svolgere su carta, con il foglio delle
+      soluzioni su una pagina a parte. Il codice della scheda resta nel link: salvandolo si ristampa la stessa scheda, e
+      cambiandolo si ottengono versioni diverse per file diverse della classe.
+    </p>
+
+    <h2>Modalità LIM</h2>
+    <p>
+      Il pulsante <strong>LIM</strong> in alto ingrandisce tutto il sito e alza il contrasto, per la proiezione sulla
+      lavagna interattiva. La scelta resta memorizzata nel browser; aggiungendo <code>?lim=1</code> a un indirizzo la si
+      attiva direttamente, con <code>?lim=0</code> la si spegne.
+    </p>
+
+    <h2>Teoria</h2>
+    <p>
+      Le <a href={url('teoria/')}>lezioni</a> sono brevi e interattive e chiudono con un collegamento all’allenamento
+      sullo stesso argomento. Sono ancora in bozza: il testo definitivo confluirà nel libro di testo, mentre qui resterà
+      l’eserciziario.
+    </p>
+  </article>
 </BaseLayout>

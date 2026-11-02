@@ -23,13 +23,13 @@ Eserciziario interattivo sulle conversioni tra basi di numerazione per la prima 
 | Testi | Bozze di Claude secondo le regole tipografiche dell’autore; revisione dell’autore |
 | Licenze | Codice MIT; contenuti CC BY-NC-SA 4.0 |
 
-## Livelli (proposta da calibrare)
+## Livelli (coppie decise da Marco, intervalli da calibrare)
 
 | Livello | Conversioni | Numeri | Punti base |
 |---|---|---|---|
-| Facile | binario ↔ decimale, binario → esadecimale | fino a 6 bit (0–63) | 10 |
-| Intermedio | ottale ed esadecimale ↔ decimale, binario ↔ ottale ed esadecimale | fino a 8–12 bit (0–4095) | 20 |
-| Difficile | tutte, ottale ↔ esadecimale, basi esotiche (1 su 10) | fino a 16 bit (0–65 535) | 40 |
+| Facile | binario ↔ decimale, ottale ↔ decimale | fino a 6 bit (8–63) | 10 |
+| Intermedio | tutte le coppie con il decimale, binario ↔ ottale ed esadecimale | fino a 8–12 bit (0–4095) | 20 |
+| Difficile | tutto il resto: numeri più grandi, ottale ↔ esadecimale, basi esotiche (1 su 10) | fino a 16 bit (0–65 535) | 40 |
 
 Streak = risposte giuste consecutive; moltiplicatore ×2 dalla quinta, ×3 dalla decima, ×5 dalla ventesima. Il punteggio non cala mai. Nessun timer di default.
 

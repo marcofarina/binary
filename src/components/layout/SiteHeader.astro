@@ -1,6 +1,7 @@
 ---
 import { t } from '@/i18n';
 import { url } from '@/lib/url';
+import LimToggle from './LimToggle.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
@@ -34,7 +35,8 @@ const currentPath = Astro.url.pathname;
         ))}
       </ul>
     </nav>
-    <div class="ms-auto sm:ms-0">
+    <div class="ms-auto flex gap-2 sm:ms-0">
+      <LimToggle />
       <ThemeToggle />
     </div>
   </div>

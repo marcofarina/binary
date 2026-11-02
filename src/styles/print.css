@@ -9,7 +9,19 @@
     color-scheme: light;
   }
 
+  html[data-lim='on'] {
+    font-size: 100%;
+  }
+
+  /* Su carta sempre nero su bianco, qualunque sia il tema dello schermo. */
   body {
+    --color-bg: #fff;
+    --color-surface: #fff;
+    --color-surface-muted: #fff;
+    --color-text: #000;
+    --color-text-muted: #333;
+    --color-border: #888;
+    --color-accent: #000;
     background: #fff !important;
     color: #000 !important;
   }
