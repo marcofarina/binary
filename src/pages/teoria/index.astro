@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
+import { isLessonIn, lessonSlug } from '@/lib/lessons';
+import { url } from '@/lib/url';
+
+const lezioni = (await getCollection('lezioni', (lezione) => isLessonIn(lezione))).sort(
+  (a, b) => a.data.ordine - b.data.ordine,
+);
+---
+
+<BaseLayout title="Teoria">
+  <section class="prose-it">
+    <h1>Teoria</h1>
+    <p>
+      Che cos’è una base, come si converte da una base all’altra e dove si incontrano binario, ottale ed esadecimale
+      fuori dai libri.
+    </p>
+  </section>
+  {lezioni.length > 0 ? (
+    <ol class="mt-6 grid max-w-3xl gap-3">
+      {lezioni.map((lezione) => (
+        <li>
+          <a
+            href={url(`teoria/${lessonSlug(lezione)}/`)}
+            class="block rounded-lg border border-border bg-surface p-4 text-text no-underline hover:border-accent"
+          >
+            <span class="font-semibold">{lezione.data.title}</span>
+            <span class="block text-text-muted">{lezione.data.description}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <p class="mt-6 max-w-3xl rounded-md border border-border bg-surface-muted px-4 py-3 text-text-muted" role="status">
+      {t('lesson.none')}
+    </p>
+  )}
+</BaseLayout>

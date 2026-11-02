@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
+import { url } from '@/lib/url';
+
+// 181 = 10110101₂: un byte con bit accesi e spenti ben mescolati.
+const bits = [1, 0, 1, 1, 0, 1, 0, 1];
+// Ogni bit acceso prende il colore successivo dell’arcobaleno.
+const colors = bits.map((_, i) => bits.slice(0, i + 1).filter(Boolean).length);
+const cards = [
+  { href: url('sfida/'), title: t('home.challenge.title'), text: t('home.challenge.text'), primary: true },
+  { href: url('allenamento/'), title: t('home.practice.title'), text: t('home.practice.text'), primary: false },
+  { href: url('teoria/'), title: t('home.theory.title'), text: t('home.theory.text'), primary: false },
+];
+---
+
+<BaseLayout>
+  <section class="flex flex-col items-center gap-6 py-6 text-center">
+    <p class="flex gap-1.5 sm:gap-3" role="img" aria-label={t('home.bits')}>
+      {bits.map((bit, i) => (
+        <span
+          class="flex size-9 animate-accendi items-center justify-center rounded-lg font-mono text-xl font-bold sm:size-14 sm:text-3xl"
+          style={`animation-delay: ${i * 90}ms; ${
+            bit
+              ? `background: var(--color-rainbow-${colors[i]}); color: #17142b;`
+              : 'background: var(--color-surface-muted); color: var(--color-text-muted);'
+          }`}
+        >
+          {bit}
+        </span>
+      ))}
+    </p>
+    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">Binary</h1>
+    <p class="max-w-2xl text-lg text-text-muted">
+      Allenati a convertire i numeri tra binario, ottale, decimale ed esadecimale. Sbagliare va bene: ti mostriamo il
+      procedimento e il punto in cui probabilmente hai perso la strada.
+    </p>
+  </section>
+  <ul class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
+    {cards.map((card) => (
+      <li>
+        <a
+          href={card.href}
+          class:list={[
+            'block h-full rounded-[var(--radius)] border p-5 no-underline transition hover:-translate-y-0.5',
+            card.primary
+              ? 'border-accent bg-accent text-accent-contrast'
+              : 'border-border bg-surface text-text hover:border-accent',
+          ]}
+        >
+          <span class="block text-xl font-bold">{card.title}</span>
+          <span class:list={['mt-1 block', card.primary ? 'opacity-90' : 'text-text-muted']}>{card.text}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

@@ -1,0 +1,78 @@
+---
+import { getCollection, getEntries, render } from 'astro:content';
+import DraftNotice from '@/components/content/DraftNotice.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
+import { isLessonIn, lessonSlug } from '@/lib/lessons';
+import { url } from '@/lib/url';
+
+export async function getStaticPaths() {
+  const lezioni = (await getCollection('lezioni', (lezione) => isLessonIn(lezione))).sort(
+    (a, b) => a.data.ordine - b.data.ordine,
+  );
+  return lezioni.map((lezione, i) => ({
+    params: { slug: lessonSlug(lezione) },
+    props: { lezione, previous: lezioni[i - 1], next: lezioni[i + 1] },
+  }));
+}
+
+const { lezione, previous, next } = Astro.props;
+const { Content } = await render(lezione);
+const fonti = await getEntries(lezione.data.fonti);
+const link = (entry: typeof lezione) => url(`teoria/${lessonSlug(entry)}/`);
+---
+
+<BaseLayout title={lezione.data.title} description={lezione.data.description}>
+  <article class="prose-it">
+    {lezione.data.stato === 'bozza' && <DraftNotice />}
+    <h1>{lezione.data.title}</h1>
+    <Content />
+    {fonti.length > 0 && (
+      <section aria-labelledby="fonti-lezione" class="mt-12 border-t border-border pt-4 font-sans text-base">
+        <h2 id="fonti-lezione" class="!mt-0 !text-lg">
+          {t('lesson.sources')}
+        </h2>
+        <ul class="text-sm text-text-muted">
+          {fonti.map(({ data }) => (
+            <li>
+              {data.autori},{' '}
+              {data.url ? (
+                <a href={data.url} class="underline">
+                  {data.titolo}
+                </a>
+              ) : (
+                <cite>{data.titolo}</cite>
+              )}
+              {data.editore && `, ${data.editore}`}
+              {data.anno && `, ${data.anno}`}.
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+  {(previous || next) && (
+    <nav aria-label={t('lesson.nav')} class="no-print mt-10 flex max-w-[72ch] flex-wrap justify-between gap-4">
+      {previous ? (
+        <a
+          href={link(previous)}
+          class="rounded-lg border border-border bg-surface px-4 py-3 no-underline hover:border-accent"
+        >
+          <span class="block text-sm text-text-muted">← {t('lesson.previous')}</span>
+          <span class="font-semibold text-text">{previous.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a
+          href={link(next)}
+          class="rounded-lg border border-border bg-surface px-4 py-3 text-right no-underline hover:border-accent"
+        >
+          <span class="block text-sm text-text-muted">{t('lesson.next')} →</span>
+          <span class="font-semibold text-text">{next.data.title}</span>
+        </a>
+      )}
+    </nav>
+  )}
+</BaseLayout>
