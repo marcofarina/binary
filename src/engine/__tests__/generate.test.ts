@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EXOTIC_BASES, generate, KINDS, LEVELS } from '../generate';
+import { EXOTIC_BASES, generate, KINDS, LEVELS, PRACTICE_PAIRS } from '../generate';
 import { formatNumeral } from '../numeral';
 import { createRng } from '../random';
 
@@ -63,5 +63,17 @@ describe('generatore', () => {
       expect([next.from, next.to]).not.toEqual([previous.from, previous.to]);
       previous = next;
     }
+  });
+
+  it('in allenamento propone solo la conversione scelta', () => {
+    const rng = createRng(8);
+    expect(PRACTICE_PAIRS).toHaveLength(12);
+    for (const pair of PRACTICE_PAIRS) {
+      for (const level of LEVELS) {
+        const ex = generate(level, rng, { only: pair });
+        expect([ex.from, ex.to]).toEqual([pair.from, pair.to]);
+      }
+    }
+    expect(generate('easy', rng, { only: 'exotic' }).exotic).toBe(true);
   });
 });

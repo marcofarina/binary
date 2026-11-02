@@ -1,11 +1,20 @@
 ---
-import ComingSoon from '@/components/content/ComingSoon.astro';
+import Practice from '@/components/practice/Practice';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
 ---
 
-<BaseLayout title="Allenamento">
-  <ComingSoon
-    title="Allenamento"
-    intro="Scegli la conversione e il livello e allenati senza punteggio, con la soluzione passo per passo dopo ogni risposta."
-  />
+<BaseLayout title={t('pr.title')} description={t('pr.intro')}>
+  <section class="prose-it mx-auto mb-6 max-w-2xl text-center">
+    <h1>{t('pr.title')}</h1>
+    <p class="font-sans text-text-muted">{t('pr.intro')}</p>
+  </section>
+  <Practice client:only="react">
+    <p slot="fallback" class="text-center text-text-muted">
+      {t('pr.loading')}
+    </p>
+  </Practice>
+  <noscript>
+    <p class="text-center">{t('ch.noscript')}</p>
+  </noscript>
 </BaseLayout>

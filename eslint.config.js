@@ -24,7 +24,7 @@ export default defineConfig(
   },
   {
     // Motore e logica della sfida sono TypeScript puro: niente DOM, niente framework, niente dipendenze.
-    files: ['src/engine/**/*.ts'],
+    files: ['src/engine/**/*.ts', 'src/game/**/*.ts'],
     languageOptions: { globals: {} },
     rules: {
       'no-restricted-imports': [
