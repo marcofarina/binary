@@ -1,0 +1,54 @@
+---
+title: Dal decimale a una base qualsiasi
+description: Le divisioni successive per la base producono le cifre una alla volta, a partire da quella più a destra.
+capitolo: rappresentare-i-numeri
+ordine: 3
+obiettivi:
+  - Convertire un numero decimale in una base qualsiasi con le divisioni successive.
+  - Spiegare perché i resti si leggono dal basso verso l’alto.
+stato: bozza
+fonti:
+  - knuth-taocp-2
+---
+
+import AnimatoreDivisioni from '@/components/lesson/AnimatoreDivisioni';
+import Approfondimento from '@/components/lesson/Approfondimento.astro';
+import Nota from '@/components/lesson/Nota.astro';
+
+Per il viaggio inverso, dal decimale verso un’altra base, si usano le **divisioni successive**.
+
+## Il procedimento
+
+1. Dividi il numero per la base e annota quoziente e resto.
+2. Dividi il quoziente per la base, e così via.
+3. Fermati quando il quoziente diventa 0.
+4. Leggi i resti **dal basso verso l’alto**: sono le cifre del risultato.
+
+Per esempio, 43 in base 2:
+
+| Divisione | Quoziente | Resto |
+| --- | --- | --- |
+| 43 : 2 | 21 | 1 |
+| 21 : 2 | 10 | 1 |
+| 10 : 2 | 5 | 0 |
+| 5 : 2 | 2 | 1 |
+| 2 : 2 | 1 | 0 |
+| 1 : 2 | 0 | 1 |
+
+Leggendo i resti dall’ultimo al primo si ottiene 101011₂. Controlla con la somma pesata: 32 + 8 + 2 + 1 = 43.
+
+<AnimatoreDivisioni client:visible numero={43} base={2} />
+
+## Perché dal basso
+
+Il primo resto dice quanto avanza dividendo per la base, cioè quante unità restano fuori dai gruppi da *b*: è la cifra delle unità, la più a destra. Il secondo resto conta le unità avanzate tra i gruppi, e così via. Ogni divisione produce la cifra successiva verso sinistra, per questo l’ultimo resto è la cifra più significativa.
+
+<Nota titolo="Resti oltre il nove">
+  In base sedici un resto può valere da 10 a 15: va scritto con una sola cifra, da A a F. Il 171 diviso per 16 dà quoziente 10 e resto 11, cioè B; poi 10 diviso per 16 dà resto 10, cioè A. Il risultato è AB₁₆, non 1011.
+</Nota>
+
+<Approfondimento titolo="Da una base qualsiasi a un’altra">
+  Per convertire, per esempio, da base cinque a base sette si passa dal decimale: prima la somma pesata, poi le divisioni successive. Nella sfida, per queste conversioni puoi scrivere anche il valore decimale intermedio: se sbagli, il sito capisce in quale delle due fasi.
+</Approfondimento>
+
+[Allenati con le divisioni successive](/allenamento/?conversione=10-2).

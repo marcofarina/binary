@@ -19,7 +19,16 @@ function Marker() {
   );
 }
 
-function Positional({ steps, highlight }: { steps: PositionalSteps; highlight: number | null }) {
+export function Positional({
+  steps,
+  highlight = null,
+  visible = Infinity,
+}: {
+  steps: PositionalSteps;
+  highlight?: number | null;
+  /** Quante righe mostrare: le lezioni le rivelano una alla volta. */
+  visible?: number;
+}) {
   return (
     <table className="w-full max-w-md border-collapse font-mono text-base">
       <caption className="mb-2 text-left font-sans text-sm text-text-muted">{t('sol.positional.caption')}</caption>
@@ -37,7 +46,7 @@ function Positional({ steps, highlight }: { steps: PositionalSteps; highlight: n
         </tr>
       </thead>
       <tbody>
-        {steps.terms.map((term, i) => (
+        {steps.terms.slice(0, visible).map((term, i) => (
           <tr key={i} className={i === highlight ? HIGHLIGHT : 'border-t border-border'}>
             <td className="px-2 py-1">
               {term.digit}
@@ -59,14 +68,29 @@ function Positional({ steps, highlight }: { steps: PositionalSteps; highlight: n
           <th scope="row" colSpan={2} className="px-2 py-1 text-left font-sans">
             {t('sol.positional.total')}
           </th>
-          <td className="px-2 py-1 text-right font-bold">{steps.total}</td>
+          <td className="px-2 py-1 text-right font-bold">
+            {visible >= steps.terms.length
+              ? steps.total
+              : steps.terms
+                  .slice(0, visible)
+                  .map((term) => term.product)
+                  .join(' + ') || '…'}
+          </td>
         </tr>
       </tfoot>
     </table>
   );
 }
 
-function Division({ steps, highlight }: { steps: DivisionSteps; highlight: number | null }) {
+export function Division({
+  steps,
+  highlight = null,
+  visible = Infinity,
+}: {
+  steps: DivisionSteps;
+  highlight?: number | null;
+  visible?: number;
+}) {
   return (
     <div>
       <table className="w-full max-w-md border-collapse font-mono text-base">
@@ -87,7 +111,7 @@ function Division({ steps, highlight }: { steps: DivisionSteps; highlight: numbe
           </tr>
         </thead>
         <tbody>
-          {steps.rows.map((row, i) => (
+          {steps.rows.slice(0, visible).map((row, i) => (
             <tr key={i} className={i === highlight ? HIGHLIGHT : 'border-t border-border'}>
               <td className="px-2 py-1 text-right">
                 {row.dividend} <span className="text-text-muted">: {steps.base}</span>
@@ -102,15 +126,17 @@ function Division({ steps, highlight }: { steps: DivisionSteps; highlight: numbe
           ))}
         </tbody>
       </table>
-      <p className="mt-2 text-sm">
-        <span aria-hidden="true">↑ </span>
-        {tf('sol.division.read', { result: steps.result })}
-      </p>
+      {visible >= steps.rows.length && (
+        <p className="mt-2 text-sm">
+          <span aria-hidden="true">↑ </span>
+          {tf('sol.division.read', { result: steps.result })}
+        </p>
+      )}
     </div>
   );
 }
 
-function Grouping({ steps, highlight }: { steps: GroupingSteps; highlight: number | null }) {
+export function Grouping({ steps, highlight = null }: { steps: GroupingSteps; highlight?: number | null }) {
   const expand = steps.direction === 'expand';
   const padded = steps.groups.some((g) => g.padding > 0);
   return (

@@ -1,0 +1,47 @@
+---
+title: Da una base qualsiasi al decimale
+description: La somma pesata — ogni cifra per il peso della sua posizione — trasforma in decimale un numero scritto in qualunque base.
+capitolo: rappresentare-i-numeri
+ordine: 2
+obiettivi:
+  - Convertire in decimale un numero scritto in una base qualsiasi con la somma pesata.
+  - Riconoscere gli errori più comuni sugli esponenti.
+stato: bozza
+fonti:
+  - knuth-taocp-2
+---
+
+import Approfondimento from '@/components/lesson/Approfondimento.astro';
+import Nota from '@/components/lesson/Nota.astro';
+import TabellaPesi from '@/components/lesson/TabellaPesi';
+
+Per sapere quanto vale un numero scritto in un’altra base basta fare quello che facciamo senza pensarci con il decimale: moltiplicare ogni cifra per il peso della sua posizione e sommare. Questo procedimento si chiama **somma pesata**.
+
+## Il procedimento
+
+1. Numera le posizioni da destra verso sinistra, partendo da 0.
+2. Il peso di ogni posizione è la base elevata al numero della posizione.
+3. Moltiplica ogni cifra per il suo peso.
+4. Somma i prodotti: il risultato è il numero in decimale.
+
+Per esempio, 1011₂:
+
+1011₂ = 1 × 2³ + 0 × 2² + 1 × 2¹ + 1 × 2⁰ = 8 + 0 + 2 + 1 = 11
+
+Con l’esadecimale il procedimento non cambia, ma prima bisogna tradurre le lettere nel loro valore. Per 2B₁₆ la B vale undici:
+
+2B₁₆ = 2 × 16¹ + 11 × 16⁰ = 32 + 11 = 43
+
+Prova con il tuo numero: la tabella si compila una riga alla volta.
+
+<TabellaPesi client:visible numero="1011" base={2} />
+
+<Nota titolo="Gli errori più frequenti">
+  La cifra più a destra ha sempre peso 1, perché qualunque base elevata a zero vale 1. Chi parte a contare le posizioni da 1 ottiene il doppio del risultato in binario, il sedicuplo in esadecimale. Un altro errore comune è assegnare i pesi partendo da sinistra.
+</Nota>
+
+<Approfondimento titolo="Il metodo di Horner">
+  C’è un modo per fare meno moltiplicazioni: si parte dalla cifra più a sinistra e, a ogni passo, si moltiplica il risultato per la base e si aggiunge la cifra successiva. Per 1011₂: 1, poi 1 × 2 + 0 = 2, poi 2 × 2 + 1 = 5, infine 5 × 2 + 1 = 11. È lo stesso calcolo della somma pesata, raccolto in un altro ordine, ed è il modo in cui un computer legge un numero scritto come testo.
+</Approfondimento>
+
+[Allenati con la somma pesata](/allenamento/?conversione=2-10).

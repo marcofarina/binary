@@ -1,0 +1,37 @@
+---
+title: L’ottale nei permessi dei file
+description: Nei sistemi Linux e Unix i permessi di un file sono nove bit, che si scrivono comodamente come tre cifre ottali.
+capitolo: rappresentare-i-numeri
+ordine: 6
+obiettivi:
+  - Leggere e scrivere i permessi di un file in ottale e in forma simbolica.
+  - Spiegare perché a ogni cifra ottale corrispondono tre permessi.
+stato: bozza
+fonti:
+  - gnu-chmod
+---
+
+import Permessi from '@/components/lesson/Permessi';
+
+Nei sistemi Linux, macOS e in tutti quelli derivati da Unix ogni file ha tre gruppi di permessi: per il **proprietario**, per il **gruppo** a cui appartiene e per **tutti gli altri**. In ogni gruppo ci sono tre permessi, ciascuno concesso o negato:
+
+- **r** (*read*), lettura;
+- **w** (*write*), scrittura;
+- **x** (*execute*), esecuzione.
+
+Tre permessi sì o no sono tre bit, e tre bit sono esattamente una cifra ottale. Con il peso 4 per la lettura, 2 per la scrittura e 1 per l’esecuzione, ogni combinazione diventa una cifra da 0 a 7: `rwx` è 4 + 2 + 1 = 7, `r-x` è 4 + 1 = 5, `r--` è 4.
+
+<Permessi client:visible modo="754" />
+
+Il comando `chmod 754 programma.sh` dà quindi tutti i permessi al proprietario (7), lettura ed esecuzione al gruppo (5) e sola lettura agli altri (4). Il comando `ls -l` mostra gli stessi permessi in forma simbolica: `rwxr-xr--`.
+
+## Le combinazioni più comuni
+
+| Ottale | Simbolico | Uso tipico |
+| --- | --- | --- |
+| 644 | `rw-r--r--` | un documento: lo modifica solo il proprietario, tutti lo leggono |
+| 600 | `rw-------` | un file privato, per esempio una chiave |
+| 755 | `rwxr-xr-x` | un programma o una cartella condivisa |
+| 700 | `rwx------` | una cartella privata |
+
+[Allenati con l’ottale](/allenamento/?conversione=2-8).

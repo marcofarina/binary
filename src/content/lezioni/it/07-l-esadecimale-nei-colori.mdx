@@ -1,0 +1,39 @@
+---
+title: L’esadecimale nei codici colore
+description: Un colore sullo schermo è fatto di tre byte — rosso, verde e blu — che si scrivono con sei cifre esadecimali.
+capitolo: rappresentare-i-numeri
+ordine: 7
+obiettivi:
+  - Leggere un codice colore esadecimale e ricavarne le tre componenti.
+  - Scrivere in esadecimale un colore dato in decimale.
+stato: bozza
+fonti:
+  - w3c-css-color-4
+---
+
+import Colore from '@/components/lesson/Colore';
+import Nota from '@/components/lesson/Nota.astro';
+
+Ogni punto di uno schermo, un *pixel*, mescola tre luci: rossa, verde e blu. Nella codifica più diffusa l’intensità di ciascuna è un byte, quindi un numero da 0 a 255. Tre byte descrivono un colore.
+
+Scritti in esadecimale, i tre byte diventano sei cifre, due per componente: è il codice colore che si usa nelle pagine web, nei programmi di grafica e nei fogli di stile CSS.
+
+<Colore client:visible r={90} g={43} b={212} />
+
+## Leggere un codice colore
+
+Il codice `#5A2BD4` si divide in tre coppie:
+
+| Componente | Esadecimale | Decimale |
+| --- | --- | --- |
+| rosso | 5A | 5 × 16 + 10 = 90 |
+| verde | 2B | 2 × 16 + 11 = 43 |
+| blu | D4 | 13 × 16 + 4 = 212 |
+
+Molto blu, un po’ di rosso e poco verde: è il viola di questo sito. Due cifre esadecimali sono otto bit, cioè esattamente un byte: per questo bastano sempre due cifre per componente, da 00 a FF.
+
+<Nota titolo="Qualche colore da riconoscere a colpo d’occhio">
+  `#000000` è il nero (tutte le luci spente), `#FFFFFF` il bianco (tutte accese al massimo), `#FF0000` il rosso puro, `#808080` un grigio medio, con le tre componenti uguali.
+</Nota>
+
+[Allenati con l’esadecimale](/allenamento/?conversione=10-16).
