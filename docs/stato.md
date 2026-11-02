@@ -8,11 +8,19 @@ Da leggere insieme a `CLAUDE.md` e `docs/piano.md` all’inizio di ogni sessione
 
 - Fase 1 (PR #2, unita): motore in `src/engine/` (vedi il suo README): numerali, procedimenti strutturati, generatore per livello con basi esotiche, `check` con diagnosi del primo errore; test unitari e di proprietà con fast-check.
 
-- Fase 2 (branch `fase-2-sfida`): logica della sfida in `src/game/` (endless e a vite, livelli, streak, moltiplicatore, codice sfida deterministico per turno, con test); componenti condivisi in `src/components/exercise/` (campo di risposta con tastierino sui dispositivi touch e valore intermedio facoltativo, procedimento con il primo errore evidenziato, messaggi di diagnosi); sfida in `src/components/challenge/` (HUD con streak arcobaleno, messaggi a comparsa, coriandoli con `canvas-confetti`, scossone con Motion, suoni Web Audio spenti di default, record in `localStorage`, link con il codice sfida); allenamento in `src/components/practice/`. Test e2e con axe su sfida e allenamento.
+- Fase 2 (PR #3, unita): logica della sfida in `src/game/` (endless e a vite, livelli, streak, moltiplicatore, codice sfida deterministico per turno, con test); componenti condivisi in `src/components/exercise/` (campo di risposta con tastierino sui dispositivi touch e valore intermedio facoltativo, procedimento con il primo errore evidenziato, messaggi di diagnosi); sfida in `src/components/challenge/` (HUD con streak arcobaleno, messaggi a comparsa, coriandoli con `canvas-confetti`, scossone con Motion, suoni Web Audio spenti di default, record in `localStorage`, link con il codice sfida); allenamento in `src/components/practice/`. Test e2e con axe su sfida e allenamento.
+
+- Fase 3 (branch `fase-3-teoria`): sette lezioni in `src/content/lezioni/it/`, tutte in `stato: bozza`, con widget in `src/components/lesson/` (contachilometri, tabella dei pesi, animatore delle divisioni, gruppi di bit, registro di memoria, permessi `chmod`, selettore di colore). Ogni lezione chiude con un link all’allenamento, che ora legge `?conversione=` e `?livello=`. Tabelle della prosa con stile proprio. Test e2e con axe su tutte le lezioni, in chiaro e in scuro.
 
 ## Prossimo passo
 
-- Fase 3: le sette lezioni di teoria in bozza, con i widget.
+- Revisione delle lezioni da parte dell’autore (da `bozza` a `rivista`).
+- Fase 4: accessibilità, pagina docenti, modalità LIM, schede stampabili.
+
+## Da verificare
+
+- Gli URL delle fonti in `src/content/fonti.yaml` (GNU Coreutils, W3C CSS Color 4, IEC 80000-13) non sono stati aperti: la rete del container li blocca.
+- `lint:content` segnala ancora 12 avvisi `numero-in-cifre`, quasi tutti numeri usati come valori (“il resto 1”, “vale 4”): da rivedere a mano.
 
 ## Da decidere o calibrare
 

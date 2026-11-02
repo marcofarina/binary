@@ -1,0 +1,45 @@
+---
+title: Il binario nella memoria
+description: Perché i computer contano in base due, che cosa sono bit e byte e quanti valori si possono scrivere con n bit.
+capitolo: rappresentare-i-numeri
+ordine: 5
+obiettivi:
+  - Spiegare perché i circuiti elettronici usano il binario.
+  - Calcolare quanti valori diversi si rappresentano con n bit.
+stato: bozza
+fonti:
+  - iec-80000-13
+---
+
+import Nota from '@/components/lesson/Nota.astro';
+import Registro from '@/components/lesson/Registro';
+
+Dentro un computer non ci sono cifre: ci sono circuiti in cui la tensione è alta o bassa, condensatori carichi o scarichi, zone di un disco magnetizzate in un verso o nell’altro. Distinguere **due** stati è facile e affidabile anche quando il segnale è disturbato; distinguerne dieci sarebbe molto più delicato. Per questo l’elettronica digitale lavora in base due.
+
+## Bit e byte
+
+Un **bit** (da *binary digit*, cifra binaria) è l’informazione contenuta in uno di quei due stati: 0 oppure 1. Otto bit formano un **byte**, l’unità con cui si misura la memoria.
+
+Prova ad accendere e spegnere gli otto bit di un byte: sotto ogni interruttore c’è il suo peso.
+
+<Registro client:visible valore={181} />
+
+## Quanti valori con n bit
+
+Ogni bit in più raddoppia le combinazioni possibili: con un bit si scrivono due valori, con due bit quattro (00, 01, 10, 11), con tre bit otto. In generale, **con n bit si scrivono 2ⁿ valori diversi**, da 0 a 2ⁿ − 1.
+
+| Bit | Valori | Dal più piccolo al più grande |
+| --- | --- | --- |
+| 1 | 2 | 0–1 |
+| 4 | 16 | 0–15 |
+| 8 | 256 | 0–255 |
+| 16 | 65 536 | 0–65 535 |
+| 32 | 4 294 967 296 | 0–4 294 967 295 |
+
+Un byte, quindi, scrive i numeri da 0 a 255: ecco perché molti valori in informatica, come le componenti di un colore, si fermano proprio a 255.
+
+<Nota titolo="Kilo o kibi?">
+  Nel Sistema internazionale kilo significa mille, ma in informatica si è a lungo usato per 1024 = 2¹⁰. Per togliere l’ambiguità la norma IEC 80000-13 ha introdotto i prefissi binari: un kibibyte (KiB) sono 1024 byte, un kilobyte (kB) sono 1000 byte.
+</Nota>
+
+[Allenati con i byte](/allenamento/?conversione=10-2).

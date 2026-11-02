@@ -1,0 +1,55 @@
+---
+title: Che cos’è una base
+description: Cifre, posizioni e pesi — il principio che accomuna il decimale, il binario e tutti gli altri sistemi posizionali.
+capitolo: rappresentare-i-numeri
+ordine: 1
+obiettivi:
+  - Spiegare che cosa sono la base, le cifre e il peso di una posizione.
+  - Leggere la notazione con il pedice, come 1011₂ o 7F₁₆.
+  - Contare in una base diversa da dieci.
+stato: bozza
+fonti:
+  - knuth-taocp-2
+---
+
+import Contachilometri from '@/components/lesson/Contachilometri';
+import Nota from '@/components/lesson/Nota.astro';
+
+Scriviamo i numeri con dieci cifre, da 0 a 9, e diamo per scontato che 352 significhi “tre centinaia, cinque decine e due unità”. In quella scrittura c’è un’idea potente: **la stessa cifra vale di più o di meno a seconda della posizione** che occupa. Il 5 di 352 vale cinquanta, quello di 520 vale cinquecento.
+
+Un sistema che funziona così si chiama *posizionale*. Il numero di cifre diverse che usa si chiama **base**: il nostro sistema decimale ha base dieci.
+
+## Cifre, posizioni e pesi
+
+In base dieci ogni posizione vale dieci volte quella alla sua destra: unità, decine, centinaia, migliaia. Il valore di una posizione si chiama **peso** ed è una potenza della base, contando le posizioni da destra a partire da zero:
+
+352 = 3 × 10² + 5 × 10¹ + 2 × 10⁰ = 300 + 50 + 2
+
+Niente obbliga a usare dieci cifre. Con una base *b* qualsiasi servono *b* cifre, da 0 a *b* − 1, e i pesi diventano le potenze di *b*: 1, *b*, *b*², *b*³ e così via.
+
+| Base | Nome | Cifre |
+| --- | --- | --- |
+| 2 | binario | 0 1 |
+| 8 | ottale | 0 1 2 3 4 5 6 7 |
+| 10 | decimale | 0 1 2 3 4 5 6 7 8 9 |
+| 16 | esadecimale | 0–9 e A B C D E F |
+
+Oltre la base dieci le cifre normali non bastano, quindi si prendono in prestito le lettere: in esadecimale A vale dieci, B undici e così via fino a F, che vale quindici.
+
+## Il pedice dice la base
+
+La scrittura 101 da sola è ambigua: in decimale è centouno, in binario è cinque. Per evitare equivoci si scrive la base come pedice: 101₁₀ e 101₂. Quando il pedice manca, di solito si intende la base dieci.
+
+<Nota titolo="Nei linguaggi di programmazione">
+  In Python, JavaScript e molti altri linguaggi il pedice diventa un prefisso: `0b101` è binario, `0o17` è ottale, `0x1F` è esadecimale.
+</Nota>
+
+## Contare in un’altra base
+
+Un contachilometri mostra bene che cosa succede quando una posizione “si riempie”: la ruota torna a 0 e fa avanzare di uno la ruota alla sua sinistra. In base dieci succede dopo il 9, in base due già dopo l’1. Scegli una base e conta.
+
+<Contachilometri client:visible base={2} />
+
+In binario si conta così: 0, 1, 10, 11, 100, 101, 110, 111, 1000. Ogni volta che tutte le cifre sono al massimo, il passo successivo aggiunge una posizione: è lo stesso salto che in decimale porta da 999 a 1000.
+
+[Allenati a leggere i numeri binari](/allenamento/?conversione=2-10).

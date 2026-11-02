@@ -1,0 +1,50 @@
+---
+title: Binario, ottale ed esadecimale
+description: Perché tra binario, ottale ed esadecimale non servono calcoli — bastano gruppi di tre o quattro bit.
+capitolo: rappresentare-i-numeri
+ordine: 4
+obiettivi:
+  - Convertire dal binario all’ottale e all’esadecimale per gruppi di bit, e viceversa.
+  - Convertire tra ottale ed esadecimale passando dal binario.
+stato: bozza
+fonti:
+  - knuth-taocp-2
+---
+
+import GruppiDiBit from '@/components/lesson/GruppiDiBit';
+import Nota from '@/components/lesson/Nota.astro';
+
+Le basi otto e sedici hanno un legame speciale con la base due: 8 = 2³ e 16 = 2⁴. Ne segue che **ogni cifra ottale corrisponde esattamente a tre bit e ogni cifra esadecimale a quattro bit**. Per passare da una base all’altra non servono né somme né divisioni: basta raggruppare.
+
+## Dal binario all’ottale o all’esadecimale
+
+1. Dividi i bit in gruppi partendo **da destra**: gruppi di tre per l’ottale, di quattro per l’esadecimale.
+2. Se il gruppo più a sinistra resta incompleto, aggiungi zeri a sinistra.
+3. Sostituisci ogni gruppo con la cifra corrispondente.
+
+Per esempio, 1011010₂ in esadecimale: 101 1010 diventa 0101 1010, cioè 5A₁₆. In ottale: 1 011 010 diventa 001 011 010, cioè 132₈.
+
+<GruppiDiBit client:visible numero="1011010" base={16} />
+
+## Al contrario
+
+Si sostituisce ogni cifra con il suo gruppo di bit, **sempre completo**: in ottale il 5 diventa 101 e l’1 diventa 001, non 1. Gli zeri iniziali del risultato si possono togliere solo alla fine, perché quelli in mezzo al numero contano.
+
+| Esadecimale | Binario | Esadecimale | Binario |
+| --- | --- | --- | --- |
+| 0 | 0000 | 8 | 1000 |
+| 1 | 0001 | 9 | 1001 |
+| 2 | 0010 | A | 1010 |
+| 3 | 0011 | B | 1011 |
+| 4 | 0100 | C | 1100 |
+| 5 | 0101 | D | 1101 |
+| 6 | 0110 | E | 1110 |
+| 7 | 0111 | F | 1111 |
+
+<Nota titolo="Tra ottale ed esadecimale">
+  Le due basi non hanno un legame diretto, ma entrambe ce l’hanno con il binario. Si espande in bit, poi si raggruppa di nuovo: 75₈ = 111 101₂ = 0011 1101₂ = 3D₁₆.
+</Nota>
+
+Per questo l’esadecimale piace tanto a chi programma: è un modo compatto di scrivere i bit, quattro alla volta, senza perdere di vista il binario che c’è sotto.
+
+[Allenati con i gruppi di bit](/allenamento/?conversione=2-16).

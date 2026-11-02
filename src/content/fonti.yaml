@@ -1,2 +1,21 @@
 # Bibliografia del sito: ogni voce ha un identificativo (`id`) richiamato dal campo `fonti` delle lezioni.
-[]
+# Gli URL vanno ricontrollati prima di portare le lezioni a `rivista` (vedi docs/stato.md).
+- id: knuth-taocp-2
+  autori: Donald E. Knuth
+  titolo: 'The Art of Computer Programming, vol. 2: Seminumerical Algorithms (§ 4.1 Positional number systems, § 4.4 Radix conversion)'
+  editore: Addison-Wesley
+  anno: 1997
+  note: Terza edizione.
+- id: iec-80000-13
+  autori: IEC
+  titolo: 'IEC 80000-13:2008, Quantities and units — Part 13: Information science and technology'
+  anno: 2008
+  note: Definisce bit, byte e i prefissi binari (kibi, mebi…).
+- id: gnu-chmod
+  autori: Free Software Foundation
+  titolo: 'GNU Coreutils manual: Numeric Modes'
+  url: https://www.gnu.org/software/coreutils/manual/html_node/Numeric-Modes.html
+- id: w3c-css-color-4
+  autori: W3C
+  titolo: 'CSS Color Module Level 4: hexadecimal notation'
+  url: https://www.w3.org/TR/css-color-4/#hex-notation

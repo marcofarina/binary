@@ -13,7 +13,7 @@ Codice con licenza MIT ([`LICENSE`](LICENSE)); testi e materiali didattici con l
 | 0 | Struttura del progetto, CI, pubblicazione su GitHub Pages | fatto |
 | 1 | Motore: conversioni, procedimenti, generatore, diagnosi del primo errore | fatto |
 | 2 | Sfida (endless e a vite), streak, animazioni, allenamento | fatto |
-| 3 | Teoria: sette lezioni con widget | da fare |
+| 3 | Teoria: sette lezioni con widget | fatto (in bozza) |
 | 4 | Accessibilità, pagina docenti, modalità LIM, schede stampabili | da fare |
 
 ## Sviluppo

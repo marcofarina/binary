@@ -114,6 +114,33 @@
     padding-inline-start: 1.5rem;
   }
 
+  .prose-it table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin-block: 0 1.5rem;
+    font-size: 1rem;
+  }
+
+  .prose-it th,
+  .prose-it td {
+    padding: 0.4rem 0.9rem 0.4rem 0;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .prose-it th {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    border-bottom-width: 2px;
+  }
+
+  .prose-it td code {
+    white-space: nowrap;
+  }
+
   .prose-it code {
     font-family: var(--font-mono);
     font-size: 0.9em;

@@ -18,11 +18,25 @@ function create(level: Level, choice: Choice): Exercise {
   return generate(level, rng, { only: { from, to } });
 }
 
+/** Legge `?conversione=2-10&livello=medium` dall’indirizzo (per i link delle lezioni). */
+function fromUrl(): { level: Level; choice: Choice } {
+  const fallback = { level: 'easy' as Level, choice: choiceOf(PRACTICE_PAIRS[0] ?? { from: 2, to: 10 }) };
+  if (typeof window === 'undefined') return fallback;
+  const params = new URLSearchParams(window.location.search);
+  const conv = params.get('conversione');
+  const lvl = params.get('livello');
+  const choice =
+    conv === 'exotic' || PRACTICE_PAIRS.some((p) => choiceOf(p) === conv) ? (conv as Choice) : fallback.choice;
+  const level = (LEVELS as readonly string[]).includes(lvl ?? '') ? (lvl as Level) : fallback.level;
+  return { level, choice };
+}
+
 /** Allenamento libero: si sceglie conversione e livello, niente punteggio, procedimento sempre disponibile. */
 export default function Practice() {
-  const [level, setLevel] = useState<Level>('easy');
-  const [choice, setChoice] = useState<Choice>(choiceOf(PRACTICE_PAIRS[0] ?? { from: 2, to: 10 }));
-  const [exercise, setExercise] = useState<Exercise>(() => create('easy', choice));
+  const [initial] = useState(fromUrl);
+  const [level, setLevel] = useState<Level>(initial.level);
+  const [choice, setChoice] = useState<Choice>(initial.choice);
+  const [exercise, setExercise] = useState<Exercise>(() => create(initial.level, initial.choice));
   const [round, setRound] = useState(0);
   const [result, setResult] = useState<Exclude<Check, { verdict: 'invalid' }> | null>(null);
   const [showSteps, setShowSteps] = useState(false);
