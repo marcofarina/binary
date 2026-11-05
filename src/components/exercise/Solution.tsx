@@ -9,6 +9,9 @@ interface Props {
   diagnosis?: Diagnosis;
 }
 
+/** In LIM le due fasi con le tabelle stanno affiancate; i gruppi di bit, già orizzontali, restano uno sotto l’altro. */
+const SIDE_BY_SIDE = 'fit:grid fit:grid-cols-2 fit:items-start fit:gap-x-8';
+
 const HIGHLIGHT = 'bg-wrong/15 outline outline-2 outline-wrong';
 
 function Marker() {
@@ -30,7 +33,7 @@ export function Positional({
   visible?: number;
 }) {
   return (
-    <table className="w-full max-w-md border-collapse font-mono text-base">
+    <table className="w-full max-w-md border-collapse font-mono text-base fit:whitespace-nowrap fit:[&_td]:py-0.5">
       <caption className="mb-2 text-left font-sans text-sm text-text-muted">{t('sol.positional.caption')}</caption>
       <thead className="font-sans text-sm text-text-muted">
         <tr>
@@ -47,7 +50,7 @@ export function Positional({
       </thead>
       <tbody>
         {steps.terms.slice(0, visible).map((term, i) => (
-          <tr key={i} className={i === highlight ? HIGHLIGHT : 'border-t border-border'}>
+          <tr key={i} className={`fit:leading-snug ${i === highlight ? HIGHLIGHT : 'border-t border-border'}`}>
             <td className="px-2 py-1">
               {term.digit}
               {term.digitValue >= 10 && <span className="text-text-muted"> = {term.digitValue}</span>}
@@ -93,7 +96,7 @@ export function Division({
 }) {
   return (
     <div>
-      <table className="w-full max-w-md border-collapse font-mono text-base">
+      <table className="w-full max-w-md border-collapse font-mono text-base fit:whitespace-nowrap fit:[&_td]:py-0.5">
         <caption className="mb-2 text-left font-sans text-sm text-text-muted">
           {tf('sol.division.caption', { base: steps.base })}
         </caption>
@@ -112,7 +115,7 @@ export function Division({
         </thead>
         <tbody>
           {steps.rows.slice(0, visible).map((row, i) => (
-            <tr key={i} className={i === highlight ? HIGHLIGHT : 'border-t border-border'}>
+            <tr key={i} className={`fit:leading-snug ${i === highlight ? HIGHLIGHT : 'border-t border-border'}`}>
               <td className="px-2 py-1 text-right">
                 {row.dividend} <span className="text-text-muted">: {steps.base}</span>
               </td>
@@ -156,12 +159,12 @@ export function Grouping({ steps, highlight = null }: { steps: GroupingSteps; hi
           return (
             <li
               key={i}
-              className={`flex flex-col items-center gap-1 rounded-lg border px-3 py-2 ${
+              className={`flex flex-col items-center gap-1 rounded-lg border px-3 py-2 fit:flex-row fit:gap-2 fit:py-1 ${
                 i === highlight ? HIGHLIGHT : 'border-border bg-surface-muted'
               }`}
             >
               {expand ? digit : bits}
-              <span aria-hidden="true" className="text-text-muted">
+              <span aria-hidden="true" className="text-text-muted fit:-rotate-90">
                 ↓
               </span>
               {expand ? bits : digit}
@@ -195,32 +198,44 @@ function Part({ steps, highlight }: { steps: SinglePhase; highlight: number | nu
 export function Solution({ steps, diagnosis }: Props) {
   const index = diagnosis?.index ?? null;
   return (
-    <section aria-labelledby="procedimento" className="flex flex-col gap-4">
-      <h2 id="procedimento" className="text-lg font-bold">
+    <section
+      aria-labelledby="procedimento"
+      className={`flex flex-col gap-4 fit:gap-3 ${steps.method === 'via-decimal' ? SIDE_BY_SIDE : ''}`}
+    >
+      <h2 id="procedimento" className="text-lg font-bold fit:col-span-2">
         {t('sol.title')}
       </h2>
       {diagnosis && (
-        <p className="rounded-lg border-l-4 border-wrong bg-surface-muted px-4 py-3" data-testid="diagnosi">
+        <p
+          className="rounded-lg border-l-4 border-wrong bg-surface-muted px-4 py-3 fit:col-span-2 fit:py-2"
+          data-testid="diagnosi"
+        >
           {diagnosisMessage(steps, diagnosis)}
           {diagnosis.phase && <> {tf('sol.errorInPhase', { phase: diagnosis.phase === 'first' ? 1 : 2 })}</>}
         </p>
       )}
       {isTwoPhase(steps) ? (
         <>
-          <PhaseHeading steps={steps} which="first" />
-          <Part steps={steps.first} highlight={diagnosis?.phase === 'first' ? index : null} />
-          <p className="text-sm">
-            {steps.method === 'via-decimal' ? (
-              <Numeral digits={String(steps.second.method === 'division' ? steps.second.value : 0)} base={10} />
-            ) : (
-              <Numeral digits={steps.first.method === 'grouping' ? steps.first.binary : ''} base={2} group />
-            )}
-          </p>
-          <PhaseHeading steps={steps} which="second" />
-          <Part steps={steps.second} highlight={diagnosis?.phase === 'second' ? index : null} />
+          <div className="flex flex-col gap-4 fit:gap-2">
+            <PhaseHeading steps={steps} which="first" />
+            <Part steps={steps.first} highlight={diagnosis?.phase === 'first' ? index : null} />
+            <p className="text-sm">
+              {steps.method === 'via-decimal' ? (
+                <Numeral digits={String(steps.second.method === 'division' ? steps.second.value : 0)} base={10} />
+              ) : (
+                <Numeral digits={steps.first.method === 'grouping' ? steps.first.binary : ''} base={2} group />
+              )}
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 fit:gap-2">
+            <PhaseHeading steps={steps} which="second" />
+            <Part steps={steps.second} highlight={diagnosis?.phase === 'second' ? index : null} />
+          </div>
         </>
       ) : (
-        <Part steps={steps as SinglePhase} highlight={index} />
+        <div className="fit:col-span-2">
+          <Part steps={steps as SinglePhase} highlight={index} />
+        </div>
       )}
     </section>
   );

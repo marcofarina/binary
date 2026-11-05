@@ -54,7 +54,7 @@ export function Hud({ state, sound, onToggleSound }: { state: GameState; sound: 
   const factor = multiplier(state.streak);
   return (
     <div className="flex flex-col gap-3 rounded-[var(--radius)] border border-border bg-surface p-4">
-      <dl className="grid grid-cols-3 items-start gap-2 text-center">
+      <dl className="grid grid-cols-3 items-start gap-2 text-center fit:grid-cols-1 fit:gap-3">
         <div>
           <dt className="text-xs text-text-muted uppercase">{t('ch.hud.score')}</dt>
           <dd className="font-mono text-2xl font-bold" data-testid="punti">

@@ -57,9 +57,9 @@ export function AnswerForm({ exercise, disabled = false, onResult }: Props) {
   const keys = [...DIGITS.slice(0, exercise.to)];
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+    <form onSubmit={submit} className="flex flex-col gap-4 fit:my-auto fit:gap-3" noValidate>
       <p
-        className="text-center text-3xl font-bold sm:text-5xl"
+        className="text-center text-3xl font-bold sm:text-5xl fit:text-6xl"
         data-testid="consegna"
         data-from={exercise.from}
         data-to={exercise.to}
@@ -104,7 +104,11 @@ export function AnswerForm({ exercise, disabled = false, onResult }: Props) {
         </p>
       </div>
 
-      <div className="hidden grid-cols-4 gap-2 pointer-coarse:grid" role="group" aria-label={t('ex.keypad')}>
+      <div
+        className="hidden grid-cols-4 gap-2 pointer-coarse:grid fit:grid-cols-9"
+        role="group"
+        aria-label={t('ex.keypad')}
+      >
         {keys.map((key) => (
           <button
             key={key}

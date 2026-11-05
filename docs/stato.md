@@ -16,6 +16,8 @@ Da leggere insieme a `CLAUDE.md` e `docs/piano.md` all’inizio di ogni sessione
 
 - Fase 4 (branch `fase-4-rifinitura`): modalità LIM (pulsante nell’intestazione, `?lim=1` e `?lim=0`, testo al 137,5% e contrasto più alto, chiave `binary-lim`); schede stampabili in `/schede/` (logica in `src/game/worksheet.ts`, codice nel link, soluzioni su una pagina a parte, stampa sempre nero su bianco); pagina docenti con la tabella dei livelli generata dal motore; link della prosa sottolineati; animazioni ridotte rispettate anche nei widget delle lezioni. Test e2e su LIM, schede, tastiera e animazioni ridotte.
 
+- Dopo la fase 4: in modalità LIM, su uno schermo orizzontale, sfida e allenamento non scorrono più (attributo `data-fit` su body, variante Tailwind `fit:`): la pagina occupa lo schermo, il testo si misura sull’altezza della finestra, HUD e scelte stanno in una colonna a sinistra, la correzione mette consegna ed esito a sinistra e procedimento a destra (fasi affiancate se sono tabelle, gruppi di bit in orizzontale). Se qualcosa non ci stesse comunque scorre solo il riquadro dell’esercizio. Test e2e a 1024 × 768, 1280 × 720 e 1920 × 1080. Le lezioni continuano a scorrere.
+
 ## Prossimo passo
 
 - Revisione delle lezioni da parte dell’autore (da `bozza` a `rivista`).
