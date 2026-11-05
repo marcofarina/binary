@@ -91,13 +91,26 @@ test.describe('sfida', () => {
     await expect(page.getByRole('heading', { name: 'Partita finita' })).toBeVisible();
   });
 
-  test('lo stesso codice sfida dà lo stesso primo esercizio', async ({ page }) => {
+  test('lo stesso codice sfida dà lo stesso primo esercizio a tutta la classe', async ({ page }) => {
     const first = async () => {
       await page.goto('sfida/?codice=123456');
       await page.getByRole('button', { name: 'Inizia' }).click();
       return page.getByTestId('consegna').getAttribute('data-source');
     };
-    expect(await first()).toBe(await first());
+    const mine = await first();
+    // Un altro studente: stesso codice, browser senza storico.
+    await page.evaluate(() => localStorage.clear());
+    expect(await first()).toBe(mine);
+  });
+
+  test('rigiocando lo stesso codice gli esercizi già visti non tornano', async ({ page }) => {
+    const first = async () => {
+      await page.goto('sfida/?codice=123456');
+      await page.getByRole('button', { name: 'Inizia' }).click();
+      return page.getByTestId('consegna').getAttribute('data-source');
+    };
+    const once = await first();
+    expect(await first()).not.toBe(once);
   });
 });
 

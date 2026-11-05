@@ -1,6 +1,6 @@
 import { AnimatePresence, MotionConfig, motion, useAnimationControls } from 'motion/react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import type { Check } from '@/engine';
+import { type Check, exerciseKey } from '@/engine';
 import {
   accuracy,
   answer,
@@ -15,6 +15,7 @@ import {
 } from '@/game/game';
 import { t, tf } from '@/i18n';
 import { AnswerForm } from '../exercise/AnswerForm';
+import { historyForChallenge, rememberSeen } from '../exercise/history';
 import { levelLabel } from '../exercise/labels';
 import { REVIEW_BUTTON, REVIEW_GRID, REVIEW_SOLUTION, REVIEW_SOURCE } from '../exercise/layout';
 import { Numeral } from '../exercise/Numeral';
@@ -72,8 +73,15 @@ export default function Challenge() {
     setTimeout(() => setToasts((all) => all.filter((x) => x.id !== item.id)), 1600);
   }, []);
 
+  // Ogni esercizio proposto entra nello storico, così non torna nemmeno nelle partite successive.
+  const currentKey = game ? exerciseKey(game.exercise) : undefined;
+  useEffect(() => {
+    if (currentKey) rememberSeen([currentKey]);
+  }, [currentKey]);
+
   function start() {
     let seed = randomSeed();
+    let chosen: number | undefined;
     if (code.trim() !== '') {
       const parsed = Number(code.trim());
       if (!isSeed(parsed)) {
@@ -81,9 +89,10 @@ export default function Challenge() {
         return;
       }
       seed = parsed;
+      chosen = parsed;
     }
     setCodeError(false);
-    setGame(createGame(mode, seed));
+    setGame(createGame(mode, seed, historyForChallenge(chosen)));
     setReview(null);
     setBeaten(false);
     setScreen('play');

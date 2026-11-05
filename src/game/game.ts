@@ -1,10 +1,11 @@
-import { createRng, type Exercise, generate, type Level, LEVELS, type Rng } from '@/engine';
+import { createRng, type Exercise, exerciseKey, generate, type Level, LEVELS, type Rng } from '@/engine';
 import { MILESTONES, multiplier, points } from './scoring';
 
 /*
  * Logica della sfida, pura e serializzabile: lo stato contiene tutto, gli eventi dicono all’interfaccia che cosa
  * festeggiare. Ogni esercizio nasce da (seme, numero del turno), così uno stesso codice sfida dà a tutta la classe
- * la stessa sequenza finché le risposte coincidono.
+ * la stessa sequenza finché le risposte coincidono. Un esercizio già proposto nella partita non torna mai: lo stato
+ * tiene le chiavi di tutti quelli visti, più quelli delle partite precedenti che l’interfaccia passa a `createGame`.
  */
 
 export type Mode = 'endless' | 'lives';
@@ -31,6 +32,8 @@ export interface GameState {
   /** Il livello più alto raggiunto. */
   maxLevel: Level;
   exercise: Exercise;
+  /** Chiavi (`exerciseKey`) degli esercizi da non riproporre: quelli della partita, compreso il corrente, e lo storico. */
+  seen: readonly string[];
   over: boolean;
 }
 
@@ -61,17 +64,28 @@ function mixedLevel(rng: Rng, round: number): Level {
   return 'hard';
 }
 
-function exerciseFor(mode: Mode, seed: number, round: number, level: Level, previous?: Exercise): Exercise {
+function exerciseFor(
+  mode: Mode,
+  seed: number,
+  round: number,
+  level: Level,
+  seen: readonly string[],
+  previous?: Exercise,
+): Exercise {
   const rng = roundRng(seed, round);
   const actual = mode === 'lives' ? mixedLevel(rng, round) : level;
-  return generate(actual, rng, previous ? { previous } : {});
+  return generate(actual, rng, previous ? { previous, seen: new Set(seen) } : { seen: new Set(seen) });
 }
 
 const rank = (level: Level) => LEVELS.indexOf(level);
 
-export function createGame(mode: Mode, seed: number): GameState {
+/**
+ * Nuova partita. `history` sono le chiavi di esercizi già visti in partite precedenti: non verranno riproposti. Con un
+ * codice sfida nuovo l’interfaccia non passa storico, così tutta la classe parte dalla stessa sequenza.
+ */
+export function createGame(mode: Mode, seed: number, history: readonly string[] = []): GameState {
   const level: Level = 'easy';
-  const exercise = exerciseFor(mode, seed, 0, level);
+  const exercise = exerciseFor(mode, seed, 0, level, history);
   return {
     mode,
     seed,
@@ -86,6 +100,7 @@ export function createGame(mode: Mode, seed: number): GameState {
     lives: mode === 'lives' ? LIVES : 0,
     maxLevel: mode === 'lives' ? exercise.level : level,
     exercise,
+    seen: [...history, exerciseKey(exercise)],
     over: false,
   };
 }
@@ -154,12 +169,13 @@ export function answer(state: GameState, outcome: 'correct' | 'wrong'): Step {
 export function nextRound(state: GameState): GameState {
   if (state.over) return state;
   const round = state.round + 1;
-  const exercise = exerciseFor(state.mode, state.seed, round, state.level, state.exercise);
+  const exercise = exerciseFor(state.mode, state.seed, round, state.level, state.seen, state.exercise);
   const level = state.mode === 'lives' ? exercise.level : state.level;
   return {
     ...state,
     round,
     exercise,
+    seen: [...state.seen, exerciseKey(exercise)],
     level,
     maxLevel: rank(level) > rank(state.maxLevel) ? level : state.maxLevel,
   };

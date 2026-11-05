@@ -8,7 +8,7 @@ senza segno entro `Number.MAX_SAFE_INTEGER`; virgola, segno e complemento a due 
 | `digits.ts` | Cifre fino a F, basi da 2 a 16, nomi delle basi, bit per cifra delle potenze di due |
 | `numeral.ts` | Lettura tollerante di ciò che scrive lo studente (spazi, minuscole, prefissi `0b`/`0o`/`0x`, pedici), scrittura, errori di cifra non valida |
 | `steps.ts` | Procedimenti come dati: somma pesata, divisioni successive, gruppi di bit, conversioni in due fasi; `methodFor` e `solve` |
-| `generate.ts` | Esercizi per livello (`easy`, `medium`, `hard`), basi esotiche solo nel difficile (circa 1 su 10), niente numerali banali |
+| `generate.ts` | Esercizi per livello (`easy`, `medium`, `hard`), basi esotiche solo nel difficile (circa 1 su 10), niente numerali banali; `seen` ed `exerciseKey` impediscono di riproporre un esercizio già visto |
 | `diagnose.ts` | `check` della risposta e diagnosi del primo errore |
 | `random.ts` | PRNG con seme (mulberry32), lo stesso di Enigma |
 

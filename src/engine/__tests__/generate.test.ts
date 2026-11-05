@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EXOTIC_BASES, generate, KINDS, LEVELS, PRACTICE_PAIRS } from '../generate';
+import { EXOTIC_BASES, exerciseKey, generate, KINDS, LEVELS, PRACTICE_PAIRS } from '../generate';
 import { formatNumeral } from '../numeral';
 import { createRng } from '../random';
 
@@ -75,5 +75,34 @@ describe('generatore', () => {
       }
     }
     expect(generate('easy', rng, { only: 'exotic' }).exotic).toBe(true);
+  });
+
+  it('la chiave non dipende dal verso della conversione', () => {
+    expect(exerciseKey({ from: 10, to: 2, value: 45 })).toBe(exerciseKey({ from: 2, to: 10, value: 45 }));
+    expect(exerciseKey({ from: 10, to: 2, value: 45 })).not.toBe(exerciseKey({ from: 10, to: 8, value: 45 }));
+  });
+
+  it('non ripropone mai un esercizio già visto, anche quando i numeri del livello finiscono', () => {
+    for (const options of [{}, { only: { from: 2, to: 10 } }, { only: 'exotic' }] as const) {
+      const rng = createRng(17);
+      const seen = new Set<string>();
+      // Il facile ha poco più di cento esercizi: cinquecento obbligano a cambiare tipo e ad allargare l’intervallo.
+      for (let i = 0; i < 500; i++) {
+        const key = exerciseKey(generate('easy', rng, { ...options, seen }));
+        expect(seen.has(key)).toBe(false);
+        seen.add(key);
+      }
+    }
+  });
+
+  it('finché ci sono numeri nuovi resta negli intervalli del livello', () => {
+    const rng = createRng(3);
+    const seen = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      const ex = generate('easy', rng, { seen });
+      seen.add(exerciseKey(ex));
+      const kind = KINDS.easy.find((k) => k.from === ex.from && k.to === ex.to);
+      expect(ex.value).toBeLessThanOrEqual(kind?.max ?? 0);
+    }
   });
 });
