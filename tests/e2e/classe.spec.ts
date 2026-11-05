@@ -31,6 +31,49 @@ test.describe('modalità LIM', () => {
       expect((await axe(page)).violations).toEqual([]);
     });
   }
+
+  for (const [width, height] of [
+    [1024, 768],
+    [1280, 720],
+    [1920, 1080],
+  ] as const) {
+    test(`sfida e allenamento stanno nello schermo senza scorrere (${width} × ${height})`, async ({ page }, info) => {
+      test.skip(info.project.name !== 'desktop', 'La disposizione per la LIM vale sugli schermi orizzontali.');
+      await page.setViewportSize({ width, height });
+      const fits = () =>
+        page.evaluate(() => {
+          // Né la pagina né il riquadro dell’esercizio (l’unico che potrebbe scorrere) devono avere contenuto nascosto.
+          const main = document.querySelector('main');
+          const scrollers = [...document.querySelectorAll('main *')].filter((el) =>
+            ['auto', 'scroll'].includes(getComputedStyle(el).overflowY),
+          );
+          return (
+            document.documentElement.scrollHeight <= window.innerHeight &&
+            main !== null &&
+            main.getBoundingClientRect().bottom <= window.innerHeight + 1 &&
+            main.scrollHeight <= main.clientHeight + 1 &&
+            scrollers.every((el) => el.scrollHeight <= el.clientHeight + 1)
+          );
+        });
+
+      // Divisioni successive più lunghe del livello difficile: 12 righe.
+      await page.goto('allenamento/?lim=1&conversione=10-2&livello=hard');
+      await page.getByLabel(/^Risposta/).fill('1');
+      await page.getByRole('button', { name: 'Verifica' }).click();
+      await expect(page.getByTestId('diagnosi')).toBeVisible();
+      expect(await fits()).toBe(true);
+
+      await page.goto('sfida/?lim=1&codice=1');
+      expect(await fits()).toBe(true);
+      await page.getByRole('button', { name: 'Inizia' }).click();
+      await expect(page.getByTestId('consegna')).toBeVisible();
+      expect(await fits()).toBe(true);
+      await page.getByLabel(/^Risposta/).fill('1');
+      await page.getByRole('button', { name: 'Verifica' }).click();
+      await expect(page.getByRole('button', { name: 'Avanti' })).toBeInViewport();
+      expect(await fits()).toBe(true);
+    });
+  }
 });
 
 test.describe('schede stampabili', () => {

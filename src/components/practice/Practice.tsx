@@ -15,6 +15,7 @@ import { t, tf } from '@/i18n';
 import { AnswerForm } from '../exercise/AnswerForm';
 import { loadSeen, rememberSeen } from '../exercise/history';
 import { levelLabel } from '../exercise/labels';
+import { REVIEW_BUTTON, REVIEW_GRID, REVIEW_SOLUTION, REVIEW_SOURCE } from '../exercise/layout';
 import { Numeral } from '../exercise/Numeral';
 import { Solution } from '../exercise/Solution';
 
@@ -67,8 +68,8 @@ export default function Practice() {
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-4">
-      <div className="grid gap-3 rounded-[var(--radius)] border border-border bg-surface p-4 sm:grid-cols-2">
+    <div className="mx-auto flex max-w-2xl flex-col gap-4 fit:grid fit:min-h-0 fit:w-full fit:max-w-none fit:flex-1 fit:grid-cols-[minmax(12rem,16rem)_minmax(0,1fr)] fit:gap-x-6">
+      <div className="grid gap-3 rounded-[var(--radius)] border border-border bg-surface p-4 sm:grid-cols-2 fit:grid-cols-1 fit:self-start">
         <div className="flex flex-col gap-1">
           <label htmlFor={`${id}-conversion`} className="font-semibold">
             {t('pr.conversion')}
@@ -112,15 +113,15 @@ export default function Practice() {
             ))}
           </select>
         </div>
-        <p className="text-sm text-text-muted sm:col-span-2" aria-live="polite">
+        <p className="text-sm text-text-muted sm:col-span-2 fit:col-span-1" aria-live="polite">
           {tf('pr.tally', tally)}
         </p>
       </div>
 
-      <div className="rounded-[var(--radius)] border-2 border-border bg-surface p-5">
+      <div className="rounded-[var(--radius)] border-2 border-border bg-surface p-5 fit:flex fit:min-h-0 fit:flex-col fit:overflow-auto">
         {result ? (
-          <div className="flex flex-col gap-4">
-            <p className="text-center text-2xl">
+          <div className={REVIEW_GRID}>
+            <p className={REVIEW_SOURCE}>
               <Numeral digits={exercise.source} base={exercise.from} group />
             </p>
             <p role="alert" className="rounded-lg bg-surface-muted px-4 py-3 text-lg">
@@ -143,23 +144,25 @@ export default function Practice() {
                 </>
               )}
             </p>
-            {result.verdict === 'wrong' ? (
-              <Solution steps={result.steps} diagnosis={result.diagnosis} />
-            ) : showSteps ? (
-              <Solution steps={solve(exercise.source, exercise.from, exercise.to)} />
-            ) : (
-              <button
-                type="button"
-                onClick={() => setShowSteps(true)}
-                className="min-h-11 self-start rounded-md border border-border px-4"
-              >
-                {t('pr.showSolution')}
-              </button>
-            )}
+            <div className={`flex flex-col ${REVIEW_SOLUTION}`}>
+              {result.verdict === 'wrong' ? (
+                <Solution steps={result.steps} diagnosis={result.diagnosis} />
+              ) : showSteps ? (
+                <Solution steps={solve(exercise.source, exercise.from, exercise.to)} />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowSteps(true)}
+                  className="min-h-11 self-start rounded-md border border-border px-4"
+                >
+                  {t('pr.showSolution')}
+                </button>
+              )}
+            </div>
             <button
               type="button"
               onClick={() => renew()}
-              className="min-h-12 rounded-[var(--radius)] bg-accent px-6 text-lg font-bold text-accent-contrast"
+              className={`min-h-12 rounded-[var(--radius)] bg-accent px-6 text-lg font-bold text-accent-contrast ${REVIEW_BUTTON}`}
             >
               {t('pr.new')}
             </button>

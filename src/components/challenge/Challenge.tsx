@@ -17,6 +17,7 @@ import { t, tf } from '@/i18n';
 import { AnswerForm } from '../exercise/AnswerForm';
 import { historyForChallenge, rememberSeen } from '../exercise/history';
 import { levelLabel } from '../exercise/labels';
+import { REVIEW_BUTTON, REVIEW_GRID, REVIEW_SOLUTION, REVIEW_SOURCE } from '../exercise/layout';
 import { Numeral } from '../exercise/Numeral';
 import { Solution } from '../exercise/Solution';
 import { burst } from './celebrate';
@@ -183,13 +184,13 @@ export default function Challenge() {
   if (screen === 'start' || !game) {
     const record = records[mode];
     return (
-      <div className="mx-auto flex max-w-2xl flex-col gap-6">
-        <fieldset className="flex flex-col gap-3">
+      <div className="mx-auto flex max-w-2xl flex-col gap-6 fit:my-auto fit:max-w-4xl fit:gap-4">
+        <fieldset className="flex flex-col gap-3 fit:flex-row">
           <legend className="mb-2 text-lg font-bold">{t('ch.mode')}</legend>
           {(['endless', 'lives'] as const).map((m) => (
             <div
               key={m}
-              className={`flex gap-3 rounded-[var(--radius)] border-2 bg-surface p-4 ${mode === m ? 'border-accent' : 'border-border'}`}
+              className={`flex gap-3 rounded-[var(--radius)] border-2 bg-surface p-4 fit:flex-1 ${mode === m ? 'border-accent' : 'border-border'}`}
             >
               <input
                 id={`${id}-mode-${m}`}
@@ -269,7 +270,7 @@ export default function Challenge() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         aria-labelledby={`${id}-over`}
-        className="mx-auto flex max-w-xl flex-col gap-5 rounded-[var(--radius)] border border-border bg-surface p-6 text-center"
+        className="mx-auto flex max-w-xl flex-col gap-5 rounded-[var(--radius)] border border-border bg-surface p-6 text-center fit:my-auto fit:max-w-3xl fit:gap-4"
       >
         <h2 id={`${id}-over`} className="text-3xl font-extrabold">
           {t('ch.over.title')}
@@ -311,13 +312,13 @@ export default function Challenge() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="relative mx-auto flex max-w-2xl flex-col gap-4">
+      <div className="relative mx-auto flex max-w-2xl flex-col gap-4 fit:grid fit:min-h-0 fit:w-full fit:max-w-none fit:flex-1 fit:grid-cols-[minmax(12rem,16rem)_minmax(0,1fr)] fit:grid-rows-[auto_1fr] fit:gap-x-6">
         <Hud state={game} sound={sound} onToggleSound={toggleSound} />
 
         <div
           aria-live="polite"
           data-testid="messaggi"
-          className="pointer-events-none absolute inset-x-0 top-28 z-10 flex flex-col items-center gap-2"
+          className="pointer-events-none absolute inset-x-0 top-28 z-10 flex flex-col items-center gap-2 fit:col-start-2 fit:row-start-1 fit:top-4"
         >
           <AnimatePresence>
             {toasts.map((item) => (
@@ -342,15 +343,15 @@ export default function Challenge() {
 
         <motion.div
           animate={card}
-          className="rounded-[var(--radius)] border-2 bg-surface p-5"
+          className="rounded-[var(--radius)] border-2 bg-surface p-5 fit:col-start-2 fit:row-span-2 fit:row-start-1 fit:flex fit:min-h-0 fit:flex-col fit:overflow-auto"
           style={{
             borderColor:
               game.streak > 0 ? `var(--color-rainbow-${((game.streak - 1) % 7) + 1})` : 'var(--color-border)',
           }}
         >
           {review ? (
-            <div className="flex flex-col gap-4">
-              <p className="text-center text-2xl">
+            <div className={REVIEW_GRID}>
+              <p className={REVIEW_SOURCE}>
                 <Numeral digits={game.exercise.source} base={game.exercise.from} group />
               </p>
               <p role="alert" className="rounded-lg bg-surface-muted px-4 py-3 text-lg">
@@ -362,12 +363,14 @@ export default function Challenge() {
                   {tf('ex.yourAnswer', { answer: review.result.answer })}
                 </span>
               </p>
-              <Solution steps={review.result.steps} diagnosis={review.result.diagnosis} />
+              <div className={REVIEW_SOLUTION}>
+                <Solution steps={review.result.steps} diagnosis={review.result.diagnosis} />
+              </div>
               <button
                 ref={nextButton}
                 type="button"
                 onClick={next}
-                className="min-h-12 rounded-[var(--radius)] bg-accent px-6 text-lg font-bold text-accent-contrast"
+                className={`min-h-12 rounded-[var(--radius)] bg-accent px-6 text-lg font-bold text-accent-contrast ${REVIEW_BUTTON}`}
               >
                 {game.over ? t('ch.over.title') : t('ex.next')}
               </button>
@@ -387,7 +390,7 @@ export default function Challenge() {
           <button
             type="button"
             onClick={() => finish(endGame(game))}
-            className="min-h-11 self-end rounded-md border border-border px-4 text-text"
+            className="min-h-11 self-end rounded-md border border-border px-4 text-text fit:col-start-1 fit:row-start-2 fit:self-end"
           >
             {t('ch.end')}
           </button>

@@ -4,6 +4,18 @@
 /* `lim:` vale dentro la sfida in modalità LIM (attributo `data-lim`, fase 4). */
 @custom-variant lim (&:where([data-lim], [data-lim] *));
 
+/*
+ * `fit:` vale nelle pagine di esercizio (`data-fit` su body) in modalità LIM su uno schermo orizzontale:
+ * lì sfida e allenamento si dispongono su due colonne per stare tutti nello schermo, senza scorrere.
+ */
+@custom-variant fit {
+  @media (orientation: landscape) and (min-width: 48rem) {
+    &:where([data-lim='on'] [data-fit] *) {
+      @slot;
+    }
+  }
+}
+
 /* Le utility Tailwind puntano ai design token, così il tema si cambia solo in tokens.css. */
 @theme inline {
   --color-bg: var(--color-bg);
@@ -184,4 +196,33 @@ html[data-lim='on'] {
 html[data-lim='on'] body {
   --color-text-muted: var(--color-text);
   --color-border: color-mix(in oklab, var(--color-text) 55%, transparent);
+}
+
+/*
+ * Nelle pagine di esercizio la LIM non si limita a ingrandire: la pagina occupa esattamente lo schermo e il testo
+ * si misura sull’altezza della finestra, così la stessa disposizione sta sia su un proiettore 1024 × 768 sia su un
+ * pannello 4K. Se qualcosa non ci stesse comunque, scorre solo il riquadro dell’esercizio, mai la pagina.
+ */
+@media (orientation: landscape) and (min-width: 48rem) {
+  html[data-lim='on']:has(body[data-fit]) {
+    font-size: clamp(100%, min(2.35vh, 1.6vw), 175%);
+  }
+
+  html[data-lim='on'] body[data-fit] {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  html[data-lim='on'] body[data-fit] > footer {
+    display: none;
+  }
+
+  html[data-lim='on'] body[data-fit] > main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-width: none;
+    padding-block: 0.75rem;
+  }
 }
