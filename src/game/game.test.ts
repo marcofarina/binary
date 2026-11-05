@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createRng, exerciseKey } from '@/engine';
 import { answer, createGame, endGame, type GameState, LEVEL_UP_AFTER, LIVES, nextRound } from './game';
 import { multiplier, points } from './scoring';
 
@@ -108,5 +109,45 @@ describe('codice sfida', () => {
     };
     expect(run(123456)).toEqual(run(123456));
     expect(run(123456)).not.toEqual(run(654321));
+  });
+});
+
+describe('esercizi mai ripetuti', () => {
+  it('in una partita nessun esercizio torna, qualunque siano le risposte (codice 1 e altri)', () => {
+    for (const mode of ['endless', 'lives'] as const) {
+      for (let game = 0; game < 300; game++) {
+        const answers = createRng(game + 1);
+        const rate = 0.3 + answers() * 0.65;
+        let state = createGame(mode, game < 100 ? 1 : game);
+        const keys = new Set<string>();
+        for (let i = 0; i < 80 && !state.over; i++) {
+          const key = exerciseKey(state.exercise);
+          expect(keys.has(key), `${mode}, partita ${game}, turno ${i}: ${key}`).toBe(false);
+          keys.add(key);
+          state = play(state, answers() < rate ? 'correct' : 'wrong').state;
+        }
+      }
+    }
+  });
+
+  it('una partita che resta sempre al facile non si ripete nemmeno dopo duecento esercizi', () => {
+    let state = createGame('endless', 1);
+    const keys = new Set<string>();
+    for (let i = 0; i < 200; i++) {
+      expect(keys.has(exerciseKey(state.exercise))).toBe(false);
+      keys.add(exerciseKey(state.exercise));
+      state = play(state, 'wrong').state;
+    }
+  });
+
+  it('gli esercizi delle partite precedenti non tornano', () => {
+    let first = createGame('endless', 1);
+    for (let i = 0; i < 15; i++) first = play(first, i % 4 === 3 ? 'wrong' : 'correct').state;
+    let second = createGame('endless', 1, first.seen);
+    const old = new Set(first.seen);
+    for (let i = 0; i < 15; i++) {
+      expect(old.has(exerciseKey(second.exercise))).toBe(false);
+      second = play(second, i % 4 === 3 ? 'wrong' : 'correct').state;
+    }
   });
 });

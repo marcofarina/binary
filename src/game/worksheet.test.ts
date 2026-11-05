@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { exerciseKey } from '@/engine';
 import { buildSheet, levelAt } from './worksheet';
 
 describe('schede', () => {
@@ -21,5 +22,14 @@ describe('schede', () => {
     expect(sheet).toHaveLength(10);
     for (const ex of sheet) expect([ex.from, ex.to]).toEqual([8, 2]);
     for (const ex of buildSheet({ level: 'easy', choice: 'exotic', count: 6, seed: 5 })) expect(ex.exotic).toBe(true);
+  });
+
+  it('nessun esercizio compare due volte nella stessa scheda', () => {
+    for (let seed = 1; seed <= 200; seed++) {
+      for (const choice of ['all', '2-10', 'exotic'] as const) {
+        const sheet = buildSheet({ level: 'easy', choice, count: 20, seed });
+        expect(new Set(sheet.map(exerciseKey)).size).toBe(sheet.length);
+      }
+    }
   });
 });

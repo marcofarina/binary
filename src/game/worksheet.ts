@@ -1,4 +1,13 @@
-import { type Base, createRng, type Exercise, generate, type GenerateOptions, type Level, LEVELS } from '@/engine';
+import {
+  type Base,
+  createRng,
+  type Exercise,
+  exerciseKey,
+  generate,
+  type GenerateOptions,
+  type Level,
+  LEVELS,
+} from '@/engine';
 
 /** Livello di una scheda: uno solo, oppure progressivo (un terzo facile, un terzo intermedio, un terzo difficile). */
 export type SheetLevel = Level | 'progressive';
@@ -27,17 +36,20 @@ function onlyOf(choice: SheetChoice): GenerateOptions['only'] {
   return { from, to };
 }
 
-/** La scheda dipende solo dalle impostazioni: con lo stesso codice si rigenera identica, soluzioni comprese. */
+/** La scheda dipende solo dalle impostazioni: con lo stesso codice si rigenera identica, soluzioni comprese. Nessun esercizio compare due volte. */
 export function buildSheet({ level, choice, count, seed }: SheetSettings): Exercise[] {
   const rng = createRng(seed);
   const only = onlyOf(choice);
   const exercises: Exercise[] = [];
+  const seen = new Set<string>();
   for (let i = 0; i < count; i++) {
     const previous = exercises.at(-1);
-    const options: GenerateOptions = {};
+    const options: GenerateOptions = { seen };
     if (previous) options.previous = previous;
     if (only) options.only = only;
-    exercises.push(generate(levelAt(level, i, count), rng, options));
+    const exercise = generate(levelAt(level, i, count), rng, options);
+    seen.add(exerciseKey(exercise));
+    exercises.push(exercise);
   }
   return exercises;
 }
