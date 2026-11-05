@@ -1,8 +1,19 @@
-import { useId, useState } from 'react';
-import { type Check, createRng, type Exercise, generate, type Level, LEVELS, PRACTICE_PAIRS, solve } from '@/engine';
+import { useEffect, useId, useState } from 'react';
+import {
+  type Check,
+  createRng,
+  type Exercise,
+  exerciseKey,
+  generate,
+  type Level,
+  LEVELS,
+  PRACTICE_PAIRS,
+  solve,
+} from '@/engine';
 import { randomSeed } from '@/game/game';
 import { t, tf } from '@/i18n';
 import { AnswerForm } from '../exercise/AnswerForm';
+import { loadSeen, rememberSeen } from '../exercise/history';
 import { levelLabel } from '../exercise/labels';
 import { Numeral } from '../exercise/Numeral';
 import { Solution } from '../exercise/Solution';
@@ -11,11 +22,13 @@ type Choice = `${number}-${number}` | 'exotic';
 
 const choiceOf = (pair: { from: number; to: number }): Choice => `${pair.from}-${pair.to}`;
 
+/** Un esercizio nuovo: mai uno già visto in questo browser (lo storico è in `localStorage`). */
 function create(level: Level, choice: Choice): Exercise {
   const rng = createRng(randomSeed());
-  if (choice === 'exotic') return generate(level, rng, { only: 'exotic' });
+  const seen = new Set(loadSeen());
+  if (choice === 'exotic') return generate(level, rng, { only: 'exotic', seen });
   const [from, to] = choice.split('-').map(Number) as [number, number];
-  return generate(level, rng, { only: { from, to } });
+  return generate(level, rng, { only: { from, to }, seen });
 }
 
 /** Legge `?conversione=2-10&livello=medium` dall’indirizzo (per i link delle lezioni). */
@@ -42,6 +55,9 @@ export default function Practice() {
   const [showSteps, setShowSteps] = useState(false);
   const [tally, setTally] = useState({ correct: 0, total: 0 });
   const id = useId();
+
+  const currentKey = exerciseKey(exercise);
+  useEffect(() => rememberSeen([currentKey]), [currentKey]);
 
   function renew(nextLevel = level, nextChoice = choice) {
     setExercise(create(nextLevel, nextChoice));

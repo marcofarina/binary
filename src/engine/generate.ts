@@ -1,6 +1,6 @@
 import type { Base } from './digits';
 import { formatNumeral } from './numeral';
-import { int, pick, type Rng } from './random';
+import { int, pick, type Rng, shuffle } from './random';
 
 export const LEVELS = ['easy', 'medium', 'hard'] as const;
 export type Level = (typeof LEVELS)[number];
@@ -80,6 +80,19 @@ function isTrivial(digits: string): boolean {
   return digits.length < 2 || /^(.)\1*$/.test(digits) || /^10+$/.test(digits);
 }
 
+/**
+ * Chiave di un esercizio: la coppia di basi senza verso e il valore. `45 → binario` e `101101 → decimale` sono lo
+ * stesso esercizio letto al contrario, quindi hanno la stessa chiave.
+ */
+export function exerciseKey({ from, to, value }: Pick<Exercise, 'from' | 'to' | 'value'>): string {
+  return `${Math.min(from, to)}-${Math.max(from, to)}:${value}`;
+}
+
+/** Tentativi con lo stesso tipo di conversione prima di cambiarlo o di allargare l’intervallo dei valori. */
+const ATTEMPTS_PER_KIND = 100;
+/** Tentativi oltre i quali un numerale banale va comunque bene. */
+const TRIVIAL_ATTEMPTS = 50;
+
 export interface GenerateOptions {
   /** L’esercizio precedente: si evita di riproporre subito la stessa conversione. */
   previous?: Pick<Exercise, 'from' | 'to'>;
@@ -88,6 +101,11 @@ export interface GenerateOptions {
    * che la prevede; `'exotic'` chiede le basi esotiche a qualunque livello.
    */
   only?: Pick<Exercise, 'from' | 'to'> | 'exotic';
+  /**
+   * Chiavi (`exerciseKey`) degli esercizi già proposti: non tornano mai. Se un tipo di conversione li ha esauriti si
+   * passa a un altro del livello e, finiti anche quelli, si allarga l’intervallo dei valori.
+   */
+  seen?: ReadonlySet<string>;
 }
 
 /** Le conversioni proposte in allenamento: tutte quelle dei livelli, senza ripetizioni. */
@@ -107,18 +125,31 @@ function kindFor(level: Level, pair: Pick<Exercise, 'from' | 'to'>): Kind {
 }
 
 export function generate(level: Level, rng: Rng, options: GenerateOptions = {}): Exercise {
-  const { previous, only } = options;
+  const { previous, only, seen } = options;
   const exotic = only === 'exotic' || (only === undefined && level === 'hard' && rng() < EXOTIC_RATE);
   let kind = exotic ? exoticKind(rng) : only ? kindFor(level, only) : pick(rng, KINDS[level]);
   if (!exotic && !only && previous && kind.from === previous.from && kind.to === previous.to) {
     const others = KINDS[level].filter((c) => c.from !== previous.from || c.to !== previous.to);
     if (others.length > 0) kind = pick(rng, others);
   }
+  // Senza `only` e fuori dalle esotiche si può ripiegare sugli altri tipi del livello, in ordine casuale. La lista
+  // nasce solo se serve, così il generatore non consuma numeri in più e le schede già stampate restano identiche.
+  let fallbacks: Kind[] | undefined;
+  let growth = 0;
   for (let attempt = 0; ; attempt++) {
-    const value = int(rng, kind.min, kind.max);
+    if (attempt > 0 && attempt % ATTEMPTS_PER_KIND === 0) {
+      const first = kind;
+      fallbacks ??= exotic || only ? [] : shuffle(rng, KINDS[level]).filter((c) => c !== first);
+      const next = fallbacks.shift();
+      if (next) kind = next;
+      else growth++;
+    }
+    const span = kind.max - kind.min + 1;
+    const value = int(rng, kind.min, kind.max + growth * span);
+    if (seen?.has(exerciseKey({ from: kind.from, to: kind.to, value }))) continue;
     const source = formatNumeral(value, kind.from);
     const answer = formatNumeral(value, kind.to);
-    if (attempt < 50 && (isTrivial(source) || isTrivial(answer))) continue;
+    if (attempt < TRIVIAL_ATTEMPTS && (isTrivial(source) || isTrivial(answer))) continue;
     return { level, from: kind.from, to: kind.to, value, source, answer, exotic };
   }
 }

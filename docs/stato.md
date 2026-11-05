@@ -16,6 +16,8 @@ Da leggere insieme a `CLAUDE.md` e `docs/piano.md` all’inizio di ogni sessione
 
 - Fase 4 (branch `fase-4-rifinitura`): modalità LIM (pulsante nell’intestazione, `?lim=1` e `?lim=0`, testo al 137,5% e contrasto più alto, chiave `binary-lim`); schede stampabili in `/schede/` (logica in `src/game/worksheet.ts`, codice nel link, soluzioni su una pagina a parte, stampa sempre nero su bianco); pagina docenti con la tabella dei livelli generata dal motore; link della prosa sottolineati; animazioni ridotte rispettate anche nei widget delle lezioni. Test e2e su LIM, schede, tastiera e animazioni ridotte.
 
+- Esercizi mai ripetuti (segnalazione di Marco del 5 novembre 2026, sfida con codice 1): ogni turno sceglieva a caso senza memoria e il facile ha poco più di cento esercizi, quindi le ripetizioni arrivavano già dopo pochi turni. Ora `generate` accetta `seen` (chiavi `exerciseKey`, coppia di basi senza verso più valore) e, finiti i numeri di un tipo, passa a un altro tipo del livello e poi allarga l’intervallo. La partita tiene le chiavi nello stato; schede e allenamento le escludono allo stesso modo. Lo storico tra una partita e l’altra sta in `localStorage` (`binary-visti`, ultimi 300 esercizi): un codice sfida mai giocato nel browser parte senza storico, così la prima partita resta uguale per tutta la classe; rigiocandolo arrivano esercizi nuovi.
+
 ## Prossimo passo
 
 - Revisione delle lezioni da parte dell’autore (da `bozza` a `rivista`).
